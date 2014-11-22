@@ -22,7 +22,7 @@
 
 extern "C"
 {
-#include "lua.h"
+#include "src/lua.h"
 };
 
 #ifdef TRINITY
