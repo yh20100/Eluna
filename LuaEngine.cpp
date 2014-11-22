@@ -313,7 +313,8 @@ void Eluna::RunScripts()
     UNORDERED_MAP<std::string, std::string> loaded; // filename, path
 
     lua_getglobal(L, "package");
-    luaL_getsubtable(L, -1, "loaded");
+    lua_pushstring(L, "loaded");
+    lua_gettable(L, -2);
     int modules = lua_gettop(L);
     for (ScriptList::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
     {
@@ -414,7 +415,7 @@ void Eluna::Push(lua_State* L, const int64 l)
 }
 void Eluna::Push(lua_State* L, const uint32 u)
 {
-    lua_pushunsigned(L, u);
+    lua_pushnumber(L, u);
 }
 void Eluna::Push(lua_State* L, const int32 i)
 {

@@ -10,8 +10,8 @@
 
 extern "C"
 {
-#include "lua.h"
-#include "lauxlib.h"
+#include "src/lua.h"
+#include "src/lauxlib.h"
 };
 
 LuaEvent::LuaEvent(ElunaEventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls) :

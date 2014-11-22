@@ -19,6 +19,7 @@ set(LuaEngine_STAT_SRCS
 include_directories(
   ${CMAKE_SOURCE_DIR}/dep/zlib
   ${CMAKE_SOURCE_DIR}/dep/lualib
+  ${CMAKE_SOURCE_DIR}/dep/lualib/src
   ${CMAKE_BINARY_DIR}
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
@@ -55,7 +56,6 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
     ${CMAKE_SOURCE_DIR}/src/server/shared/Policies
     ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
     ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
-    ${CMAKE_SOURCE_DIR}/src/server/ipc
     ${CMAKE_SOURCE_DIR}/src/server/collision
     ${CMAKE_SOURCE_DIR}/src/server/collision/Management
     ${CMAKE_SOURCE_DIR}/src/server/collision/Models
