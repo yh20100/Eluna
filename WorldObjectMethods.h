@@ -744,7 +744,7 @@ namespace LuaWorldObject
      * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
      * @return int eventId : unique ID for the timed event used to cancel it or nil
      */
-    int RegisterEvent(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    int RegisterEvent(Eluna* E, lua_State* L, WorldObject* obj)
     {
         luaL_checktype(L, 2, LUA_TFUNCTION);
         uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
@@ -754,7 +754,7 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            obj->elunaEvents->AddEvent(functionRef, delay, repeats);
+            E->eventMgr->AddEvent(obj->GET_GUID(), functionRef, delay, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;
@@ -765,10 +765,10 @@ namespace LuaWorldObject
      *
      * @param int eventId : event Id to remove
      */
-    int RemoveEventById(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    int RemoveEventById(Eluna* E, lua_State* L, WorldObject* obj)
     {
         int eventId = Eluna::CHECKVAL<int>(L, 2);
-        obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
+        E->eventMgr->Delete(obj->GET_GUID(), eventId);
         return 0;
     }
 
@@ -776,9 +776,9 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(Eluna* /*E*/, lua_State* /*L*/, WorldObject* obj)
+    int RemoveEvents(Eluna* E, lua_State* /*L*/, WorldObject* obj)
     {
-        obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
+        E->eventMgr->Delete(obj->GET_GUID());
         return 0;
     }
 
