@@ -576,3 +576,4 @@ int luaopen_marshal(lua_State *L)
     luaL_setfuncs(L, R, 0);
     return 1;
 }
+
