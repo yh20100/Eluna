@@ -277,9 +277,9 @@ namespace LuaItem
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
         {
 #ifdef CATA
-            char* suffix = NULL;
+            char* suffix = nullptr;
 #else
-            char* const* suffix = NULL;
+            char* const* suffix = nullptr;
 #endif
             if (itemRandPropId < 0)
             {
@@ -747,7 +747,7 @@ namespace LuaItem
 #ifndef TRINITY
         item->SaveToDB();
 #else
-        SQLTransaction trans = SQLTransaction(NULL);
+        SQLTransaction trans = SQLTransaction(nullptr);
         item->SaveToDB(trans);
 #endif
         return 0;
