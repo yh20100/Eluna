@@ -1082,7 +1082,7 @@ namespace LuaPlayer
     /**
      * Returns the combo target GUID.
      *
-     * @return uint64 reputationAmt
+     * @return uint64 comboTargetGUID
      */
     int GetComboTarget(lua_State* L, Player* player)
     {
