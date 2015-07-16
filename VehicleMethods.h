@@ -15,7 +15,7 @@
 namespace LuaVehicle
 {
     /* BOOLEAN */
-    int IsOnBoard(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int IsOnBoard(lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
 #ifndef TRINITY
@@ -27,7 +27,7 @@ namespace LuaVehicle
     }
 
     /* GETTERS */
-    int GetOwner(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int GetOwner(lua_State* L, Vehicle* vehicle)
     {
 #ifndef TRINITY
         Eluna::Push(L, vehicle->GetOwner());
@@ -37,7 +37,7 @@ namespace LuaVehicle
         return 1;
     }
 
-    int GetEntry(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int GetEntry(lua_State* L, Vehicle* vehicle)
     {
 #ifndef TRINITY
         Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID);
@@ -47,7 +47,7 @@ namespace LuaVehicle
         return 1;
     }
 
-    int GetPassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int GetPassenger(lua_State* L, Vehicle* vehicle)
     {
         int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
         Eluna::Push(L, vehicle->GetPassenger(seatId));
@@ -55,7 +55,7 @@ namespace LuaVehicle
     }
 
     /* OTHER */
-    int AddPassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int AddPassenger(lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
         int8 seatId = Eluna::CHECKVAL<int8>(L, 3);
@@ -68,7 +68,7 @@ namespace LuaVehicle
         return 0;
     }
 
-    int RemovePassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+    int RemovePassenger(lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
 #ifndef TRINITY

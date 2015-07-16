@@ -81,13 +81,13 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { ENV_BOTH, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
     { ENV_BOTH, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
     { ENV_BOTH, "GetQuest", &LuaGlobalFunctions::GetQuest },
-    { ENV_NONE, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
-    { ENV_NONE, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
+    { ENV_WORLD, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
+    { ENV_WORLD, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
     { ENV_BOTH, "GetGameTime", &LuaGlobalFunctions::GetGameTime },
     { ENV_WORLD, "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld },
-    { ENV_NONE, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
-    { ENV_NONE, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
-    { ENV_NONE, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
+    { ENV_WORLD, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
+    { ENV_WORLD, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
+    { ENV_WORLD, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
     { ENV_BOTH, "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
     { ENV_BOTH, "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
     { ENV_BOTH, "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
@@ -95,7 +95,7 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { ENV_BOTH, "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
     { ENV_BOTH, "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
     { ENV_BOTH, "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
-    { ENV_NONE, "GetAreaName", &LuaGlobalFunctions::GetAreaName },
+    { ENV_BOTH, "GetAreaName", &LuaGlobalFunctions::GetAreaName },
     { ENV_BOTH, "bit_not", &LuaGlobalFunctions::bit_not },
     { ENV_BOTH, "bit_xor", &LuaGlobalFunctions::bit_xor },
     { ENV_BOTH, "bit_rshift", &LuaGlobalFunctions::bit_rshift },
@@ -111,33 +111,33 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { ENV_BOTH, "PrintDebug", &LuaGlobalFunctions::PrintDebug },
 
     // Boolean
-    { ENV_NONE, "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
-    { ENV_NONE, "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
-    { ENV_NONE, "IsBankPos", &LuaGlobalFunctions::IsBankPos },
-    { ENV_NONE, "IsBagPos", &LuaGlobalFunctions::IsBagPos },
+    { ENV_BOTH, "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
+    { ENV_BOTH, "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
+    { ENV_BOTH, "IsBankPos", &LuaGlobalFunctions::IsBankPos },
+    { ENV_BOTH, "IsBagPos", &LuaGlobalFunctions::IsBagPos },
 
     // Other
-    { ENV_NONE, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
-    { ENV_NONE, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
-    { ENV_NONE, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
-    { ENV_NONE, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
-    { ENV_NONE, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
-    { ENV_NONE, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
-    { ENV_NONE, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
-    { ENV_NONE, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
-    { ENV_NONE, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
-    { ENV_NONE, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
-    { ENV_NONE, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
+    { ENV_BOTH, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
+    { ENV_BOTH, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
+    { ENV_BOTH, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
+    { ENV_BOTH, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
+    { ENV_BOTH, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
+    { ENV_BOTH, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
+    { ENV_BOTH, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
+    { ENV_BOTH, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
+    { ENV_BOTH, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
+    { ENV_BOTH, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
+    { ENV_BOTH, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
     { ENV_NONE, "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
-    { ENV_NONE, "CreatePacket", &LuaGlobalFunctions::CreatePacket },
-    { ENV_NONE, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
-    { ENV_NONE, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
-    { ENV_NONE, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
+    { ENV_BOTH, "CreatePacket", &LuaGlobalFunctions::CreatePacket },
+    { ENV_BOTH, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
+    { ENV_BOTH, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
+    { ENV_BOTH, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
     { ENV_NONE, "Kick", &LuaGlobalFunctions::Kick },
     { ENV_NONE, "Ban", &LuaGlobalFunctions::Ban },
-    { ENV_NONE, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
-    { ENV_NONE, "SendMail", &LuaGlobalFunctions::SendMail },
-    { ENV_NONE, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
+    { ENV_BOTH, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
+    { ENV_BOTH, "SendMail", &LuaGlobalFunctions::SendMail },
+    { ENV_WORLD, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
     { ENV_NONE, "AddCorpse", &LuaGlobalFunctions::AddCorpse },
     { ENV_NONE, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse },
     { ENV_NONE, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer },
@@ -153,41 +153,41 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
 ElunaRegister<Object> ObjectMethods[] =
 {
     // Getters
-    { ENV_NONE, "GetEntry", &LuaObject::GetEntry },                     // :GetEntry() - Returns the object's entryId
-    { ENV_NONE, "GetGUID", &LuaObject::GetGUID },                       // :GetGUID() - Returns uint64 guid as hex string
-    { ENV_NONE, "GetGUIDLow", &LuaObject::GetGUIDLow },                 // :GetGUIDLow() - Returns uint32 guid (low guid)) that is used to differentiate objects of same type.
-    { ENV_NONE, "GetInt32Value", &LuaObject::GetInt32Value },           // :GetInt32Value(index) - returns an int value from object fields
-    { ENV_NONE, "GetUInt32Value", &LuaObject::GetUInt32Value },         // :GetUInt32Value(index) - returns an uint value from object fields
-    { ENV_NONE, "GetFloatValue", &LuaObject::GetFloatValue },           // :GetFloatValue(index) - returns a float value from object fields
-    { ENV_NONE, "GetByteValue", &LuaObject::GetByteValue },             // :GetByteValue(index, offset) - returns a byte value from object fields
-    { ENV_NONE, "GetUInt16Value", &LuaObject::GetUInt16Value },         // :GetUInt16Value(index, offset) - returns a uint16 value from object fields
-    { ENV_NONE, "GetUInt64Value", &LuaObject::GetUInt64Value },         // :GetUInt64Value(index) - returns a uint64 value from object fields
-    { ENV_NONE, "GetScale", &LuaObject::GetScale },                     // :GetScale()
-    { ENV_NONE, "GetTypeId", &LuaObject::GetTypeId },                   // :GetTypeId() - Returns the object's typeId
+    { ENV_BOTH, "GetEntry", &LuaObject::GetEntry },                     // :GetEntry() - Returns the object's entryId
+    { ENV_BOTH, "GetGUID", &LuaObject::GetGUID },                       // :GetGUID() - Returns uint64 guid as hex string
+    { ENV_BOTH, "GetGUIDLow", &LuaObject::GetGUIDLow },                 // :GetGUIDLow() - Returns uint32 guid (low guid) that is used to differentiate objects of same type.
+    { ENV_BOTH, "GetInt32Value", &LuaObject::GetInt32Value },           // :GetInt32Value(index) - returns an int value from object fields
+    { ENV_BOTH, "GetUInt32Value", &LuaObject::GetUInt32Value },         // :GetUInt32Value(index) - returns an uint value from object fields
+    { ENV_BOTH, "GetFloatValue", &LuaObject::GetFloatValue },           // :GetFloatValue(index) - returns a float value from object fields
+    { ENV_BOTH, "GetByteValue", &LuaObject::GetByteValue },             // :GetByteValue(index, offset) - returns a byte value from object fields
+    { ENV_BOTH, "GetUInt16Value", &LuaObject::GetUInt16Value },         // :GetUInt16Value(index, offset) - returns a uint16 value from object fields
+    { ENV_BOTH, "GetUInt64Value", &LuaObject::GetUInt64Value },         // :GetUInt64Value(index) - returns a uint64 value from object fields
+    { ENV_BOTH, "GetScale", &LuaObject::GetScale },                     // :GetScale()
+    { ENV_BOTH, "GetTypeId", &LuaObject::GetTypeId },                   // :GetTypeId() - Returns the object's typeId
 
     // Setters
-    { ENV_NONE, "SetInt32Value", &LuaObject::SetInt32Value },           // :SetInt32Value(index, value) - Sets an int value for the object
-    { ENV_NONE, "SetUInt32Value", &LuaObject::SetUInt32Value },         // :SetUInt32Value(index, value) - Sets an uint value for the object
-    { ENV_NONE, "UpdateUInt32Value", &LuaObject::UpdateUInt32Value },   // :UpdateUInt32Value(index, value) - Sets an uint value for the object
-    { ENV_NONE, "SetFloatValue", &LuaObject::SetFloatValue },           // :SetFloatValue(index, value) - Sets a float value for the object
-    { ENV_NONE, "SetByteValue", &LuaObject::SetByteValue },             // :SetByteValue(index, offset, value) - Sets a byte value for the object
-    { ENV_NONE, "SetUInt16Value", &LuaObject::SetUInt16Value },         // :SetUInt16Value(index, offset, value) - Sets an uint16 value for the object
-    { ENV_NONE, "SetInt16Value", &LuaObject::SetInt16Value },           // :SetInt16Value(index, offset, value) - Sets an int16 value for the object
-    { ENV_NONE, "SetUInt64Value", &LuaObject::SetUInt64Value },         // :SetUInt64Value(index, value) - Sets an uint64 value for the object
-    { ENV_NONE, "SetScale", &LuaObject::SetScale },                     // :SetScale(scale)
-    { ENV_NONE, "SetFlag", &LuaObject::SetFlag },                       // :SetFlag(index, flag)
+    { ENV_BOTH, "SetInt32Value", &LuaObject::SetInt32Value },           // :SetInt32Value(index, value) - Sets an int value for the object
+    { ENV_BOTH, "SetUInt32Value", &LuaObject::SetUInt32Value },         // :SetUInt32Value(index, value) - Sets an uint value for the object
+    { ENV_BOTH, "UpdateUInt32Value", &LuaObject::UpdateUInt32Value },   // :UpdateUInt32Value(index, value) - Sets an uint value for the object
+    { ENV_BOTH, "SetFloatValue", &LuaObject::SetFloatValue },           // :SetFloatValue(index, value) - Sets a float value for the object
+    { ENV_BOTH, "SetByteValue", &LuaObject::SetByteValue },             // :SetByteValue(index, offset, value) - Sets a byte value for the object
+    { ENV_BOTH, "SetUInt16Value", &LuaObject::SetUInt16Value },         // :SetUInt16Value(index, offset, value) - Sets an uint16 value for the object
+    { ENV_BOTH, "SetInt16Value", &LuaObject::SetInt16Value },           // :SetInt16Value(index, offset, value) - Sets an int16 value for the object
+    { ENV_BOTH, "SetUInt64Value", &LuaObject::SetUInt64Value },         // :SetUInt64Value(index, value) - Sets an uint64 value for the object
+    { ENV_BOTH, "SetScale", &LuaObject::SetScale },                     // :SetScale(scale)
+    { ENV_BOTH, "SetFlag", &LuaObject::SetFlag },                       // :SetFlag(index, flag)
 
     // Boolean
-    { ENV_NONE, "IsInWorld", &LuaObject::IsInWorld },                   // :IsInWorld() - Returns if the object is in world
-    { ENV_NONE, "HasFlag", &LuaObject::HasFlag },                       // :HasFlag(index, flag)
+    { ENV_BOTH, "IsInWorld", &LuaObject::IsInWorld },                   // :IsInWorld() - Returns if the object is in world
+    { ENV_BOTH, "HasFlag", &LuaObject::HasFlag },                       // :HasFlag(index, flag)
 
     // Other
-    { ENV_NONE, "ToGameObject", &LuaObject::ToGameObject },             // :ToGameObject()
-    { ENV_NONE, "ToUnit", &LuaObject::ToUnit },                         // :ToUnit()
-    { ENV_NONE, "ToCreature", &LuaObject::ToCreature },                 // :ToCreature()
-    { ENV_NONE, "ToPlayer", &LuaObject::ToPlayer },                     // :ToPlayer()
-    { ENV_NONE, "ToCorpse", &LuaObject::ToCorpse },                     // :ToCorpse()
-    { ENV_NONE, "RemoveFlag", &LuaObject::RemoveFlag },                 // :RemoveFlag(index, flag)
+    { ENV_BOTH, "ToGameObject", &LuaObject::ToGameObject },             // :ToGameObject()
+    { ENV_BOTH, "ToUnit", &LuaObject::ToUnit },                         // :ToUnit()
+    { ENV_BOTH, "ToCreature", &LuaObject::ToCreature },                 // :ToCreature()
+    { ENV_BOTH, "ToPlayer", &LuaObject::ToPlayer },                     // :ToPlayer()
+    { ENV_BOTH, "ToCorpse", &LuaObject::ToCorpse },                     // :ToCorpse()
+    { ENV_BOTH, "RemoveFlag", &LuaObject::RemoveFlag },                 // :RemoveFlag(index, flag)
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -195,45 +195,45 @@ ElunaRegister<Object> ObjectMethods[] =
 ElunaRegister<WorldObject> WorldObjectMethods[] =
 {
     // Getters
-    { ENV_NONE, "GetName", &LuaWorldObject::GetName },                              // :GetName()
-    { ENV_NONE, "GetMap", &LuaWorldObject::GetMap },                                // :GetMap() - Returns the WorldObject's current map object
+    { ENV_BOTH, "GetName", &LuaWorldObject::GetName },                              // :GetName()
+    { ENV_BOTH, "GetMap", &LuaWorldObject::GetMap },                                // :GetMap() - Returns the WorldObject's current map object
 #if (!defined(TBC) && !defined(CLASSIC))
-    { ENV_NONE, "GetPhaseMask", &LuaWorldObject::GetPhaseMask },                    // :GetPhaseMask()
+    { ENV_BOTH, "GetPhaseMask", &LuaWorldObject::GetPhaseMask },                    // :GetPhaseMask()
 #endif
-    { ENV_NONE, "GetInstanceId", &LuaWorldObject::GetInstanceId },                  // :GetInstanceId()
-    { ENV_NONE, "GetAreaId", &LuaWorldObject::GetAreaId },                          // :GetAreaId()
-    { ENV_NONE, "GetZoneId", &LuaWorldObject::GetZoneId },                          // :GetZoneId()
-    { ENV_NONE, "GetMapId", &LuaWorldObject::GetMapId },                            // :GetMapId() - Returns the WorldObject's current map ID
-    { ENV_NONE, "GetX", &LuaWorldObject::GetX },                                    // :GetX()
-    { ENV_NONE, "GetY", &LuaWorldObject::GetY },                                    // :GetY()
-    { ENV_NONE, "GetZ", &LuaWorldObject::GetZ },                                    // :GetZ()
-    { ENV_NONE, "GetO", &LuaWorldObject::GetO },                                    // :GetO()
-    { ENV_NONE, "GetLocation", &LuaWorldObject::GetLocation },                      // :GetLocation() - returns X, Y, Z and O co - ords (in that order)
-    { ENV_NONE, "GetPlayersInRange", &LuaWorldObject::GetPlayersInRange },          // :GetPlayersInRange([range]) - Returns a table with players in range of the WorldObject.
-    { ENV_NONE, "GetCreaturesInRange", &LuaWorldObject::GetCreaturesInRange },      // :GetCreaturesInRange([range, entry]) - Returns a table with creatures of given entry in range of the WorldObject.
-    { ENV_NONE, "GetGameObjectsInRange", &LuaWorldObject::GetGameObjectsInRange },  // :GetGameObjectsInRange([range, entry]) - Returns a table with gameobjects of given entry in range of the WorldObject.
-    { ENV_NONE, "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer },            // :GetNearestPlayer([range]) - Returns nearest player in sight or given range.
-    { ENV_NONE, "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject },    // :GetNearestGameObject([range, entry]) - Returns nearest gameobject with given entry in sight or given range entry can be 0 or nil for any.
-    { ENV_NONE, "GetNearestCreature", &LuaWorldObject::GetNearestCreature },        // :GetNearestCreature([range, entry]) - Returns nearest creature with given entry in sight or given range entry can be 0 or nil for any.
-    { ENV_NONE, "GetNearObject", &LuaWorldObject::GetNearObject },
-    { ENV_NONE, "GetNearObjects", &LuaWorldObject::GetNearObjects },
-    { ENV_NONE, "GetDistance", &LuaWorldObject::GetDistance },
-    { ENV_NONE, "GetExactDistance", &LuaWorldObject::GetExactDistance },
-    { ENV_NONE, "GetDistance2d", &LuaWorldObject::GetDistance2d },
-    { ENV_NONE, "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
-    { ENV_NONE, "GetRelativePoint", &LuaWorldObject::GetRelativePoint },            // :GetRelativePoint(dist, rad) - Returns the x, y and z of a point dist away from worldobject.
-    { ENV_NONE, "GetAngle", &LuaWorldObject::GetAngle },                            // :GetAngle(WorldObject or x, y) - Returns angle between world object and target or x and y coords.
+    { ENV_BOTH, "GetInstanceId", &LuaWorldObject::GetInstanceId },                  // :GetInstanceId()
+    { ENV_BOTH, "GetAreaId", &LuaWorldObject::GetAreaId },                          // :GetAreaId()
+    { ENV_BOTH, "GetZoneId", &LuaWorldObject::GetZoneId },                          // :GetZoneId()
+    { ENV_BOTH, "GetMapId", &LuaWorldObject::GetMapId },                            // :GetMapId() - Returns the WorldObject's current map ID
+    { ENV_BOTH, "GetX", &LuaWorldObject::GetX },                                    // :GetX()
+    { ENV_BOTH, "GetY", &LuaWorldObject::GetY },                                    // :GetY()
+    { ENV_BOTH, "GetZ", &LuaWorldObject::GetZ },                                    // :GetZ()
+    { ENV_BOTH, "GetO", &LuaWorldObject::GetO },                                    // :GetO()
+    { ENV_BOTH, "GetLocation", &LuaWorldObject::GetLocation },                      // :GetLocation() - returns X, Y, Z and O co - ords (in that order)
+    { ENV_BOTH, "GetPlayersInRange", &LuaWorldObject::GetPlayersInRange },          // :GetPlayersInRange([range]) - Returns a table with players in range of the WorldObject.
+    { ENV_BOTH, "GetCreaturesInRange", &LuaWorldObject::GetCreaturesInRange },      // :GetCreaturesInRange([range, entry]) - Returns a table with creatures of given entry in range of the WorldObject.
+    { ENV_BOTH, "GetGameObjectsInRange", &LuaWorldObject::GetGameObjectsInRange },  // :GetGameObjectsInRange([range, entry]) - Returns a table with gameobjects of given entry in range of the WorldObject.
+    { ENV_BOTH, "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer },            // :GetNearestPlayer([range]) - Returns nearest player in sight or given range.
+    { ENV_BOTH, "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject },    // :GetNearestGameObject([range, entry]) - Returns nearest gameobject with given entry in sight or given range entry can be 0 or nil for any.
+    { ENV_BOTH, "GetNearestCreature", &LuaWorldObject::GetNearestCreature },        // :GetNearestCreature([range, entry]) - Returns nearest creature with given entry in sight or given range entry can be 0 or nil for any.
+    { ENV_BOTH, "GetNearObject", &LuaWorldObject::GetNearObject },
+    { ENV_BOTH, "GetNearObjects", &LuaWorldObject::GetNearObjects },
+    { ENV_BOTH, "GetDistance", &LuaWorldObject::GetDistance },
+    { ENV_BOTH, "GetExactDistance", &LuaWorldObject::GetExactDistance },
+    { ENV_BOTH, "GetDistance2d", &LuaWorldObject::GetDistance2d },
+    { ENV_BOTH, "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
+    { ENV_BOTH, "GetRelativePoint", &LuaWorldObject::GetRelativePoint },            // :GetRelativePoint(dist, rad) - Returns the x, y and z of a point dist away from worldobject.
+    { ENV_BOTH, "GetAngle", &LuaWorldObject::GetAngle },                            // :GetAngle(WorldObject or x, y) - Returns angle between world object and target or x and y coords.
 
     // Boolean
-    { ENV_NONE, "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
+    { ENV_BOTH, "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
 
     // Other
-    { ENV_NONE, "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
-    { ENV_NONE, "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
-    { ENV_NONE, "SendPacket", &LuaWorldObject::SendPacket },                        // :SendPacket(packet) - Sends a specified packet to everyone around
-    { ENV_NONE, "RegisterEvent", &LuaWorldObject::RegisterEvent },
-    { ENV_NONE, "RemoveEventById", &LuaWorldObject::RemoveEventById },
-    { ENV_NONE, "RemoveEvents", &LuaWorldObject::RemoveEvents },
+    { ENV_BOTH, "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
+    { ENV_BOTH, "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
+    { ENV_BOTH, "SendPacket", &LuaWorldObject::SendPacket },                        // :SendPacket(packet) - Sends a specified packet to everyone around
+    { ENV_BOTH, "RegisterEvent", &LuaWorldObject::RegisterEvent },
+    { ENV_BOTH, "RemoveEventById", &LuaWorldObject::RemoveEventById },
+    { ENV_BOTH, "RemoveEvents", &LuaWorldObject::RemoveEvents },
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -859,30 +859,30 @@ ElunaRegister<Creature> CreatureMethods[] =
 ElunaRegister<GameObject> GameObjectMethods[] =
 {
     // Getters
-    { ENV_NONE, "GetDisplayId", &LuaGameObject::GetDisplayId },
-    { ENV_NONE, "GetGoState", &LuaGameObject::GetGoState },
-    { ENV_NONE, "GetLootState", &LuaGameObject::GetLootState },
-    { ENV_NONE, "GetLootRecipient", &LuaGameObject::GetLootRecipient },
-    { ENV_NONE, "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
-    { ENV_NONE, "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
+    { ENV_BOTH, "GetDisplayId", &LuaGameObject::GetDisplayId },
+    { ENV_BOTH, "GetGoState", &LuaGameObject::GetGoState },
+    { ENV_BOTH, "GetLootState", &LuaGameObject::GetLootState },
+    { ENV_BOTH, "GetLootRecipient", &LuaGameObject::GetLootRecipient },
+    { ENV_BOTH, "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
+    { ENV_BOTH, "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
 
     // Setters
-    { ENV_NONE, "SetGoState", &LuaGameObject::SetGoState },
-    { ENV_NONE, "SetLootState", &LuaGameObject::SetLootState },
+    { ENV_BOTH, "SetGoState", &LuaGameObject::SetGoState },
+    { ENV_BOTH, "SetLootState", &LuaGameObject::SetLootState },
 
     // Boolean
-    { ENV_NONE, "IsTransport", &LuaGameObject::IsTransport },
+    { ENV_BOTH, "IsTransport", &LuaGameObject::IsTransport },
     // { "IsDestructible", &LuaGameObject::IsDestructible },    // :IsDestructible()
-    { ENV_NONE, "IsActive", &LuaGameObject::IsActive },
-    { ENV_NONE, "HasQuest", &LuaGameObject::HasQuest },
-    { ENV_NONE, "IsSpawned", &LuaGameObject::IsSpawned },
+    { ENV_BOTH, "IsActive", &LuaGameObject::IsActive },
+    { ENV_BOTH, "HasQuest", &LuaGameObject::HasQuest },
+    { ENV_BOTH, "IsSpawned", &LuaGameObject::IsSpawned },
 
     // Other
-    { ENV_NONE, "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
-    { ENV_NONE, "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
-    { ENV_NONE, "Despawn", &LuaGameObject::Despawn },
-    { ENV_NONE, "Respawn", &LuaGameObject::Respawn },
-    { ENV_NONE, "SaveToDB", &LuaGameObject::SaveToDB },
+    { ENV_BOTH, "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
+    { ENV_BOTH, "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
+    { ENV_BOTH, "Despawn", &LuaGameObject::Despawn },
+    { ENV_BOTH, "Respawn", &LuaGameObject::Respawn },
+    { ENV_BOTH, "SaveToDB", &LuaGameObject::SaveToDB },
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -890,75 +890,75 @@ ElunaRegister<GameObject> GameObjectMethods[] =
 ElunaRegister<Item> ItemMethods[] =
 {
     // Getters
-    { ENV_NONE, "GetOwnerGUID", &LuaItem::GetOwnerGUID },                   // :GetOwnerGUID() - Returns the owner's guid
-    { ENV_NONE, "GetOwner", &LuaItem::GetOwner },                           // :GetOwner() - Returns the owner object (player)
-    { ENV_NONE, "GetCount", &LuaItem::GetCount },                           // :GetCount() - Returns item stack count
-    { ENV_NONE, "GetMaxStackCount", &LuaItem::GetMaxStackCount },           // :GetMaxStackCount() - Returns item max stack count
-    { ENV_NONE, "GetSlot", &LuaItem::GetSlot },                             // :GetSlot() - returns the slot the item is in
-    { ENV_NONE, "GetBagSlot", &LuaItem::GetBagSlot },                       // :GetBagSlot() - returns the bagslot of the bag the item is in
-    { ENV_NONE, "GetEnchantmentId", &LuaItem::GetEnchantmentId },           // :GetEnchantmentId(enchant_slot) - Returns the enchantment in given slot. (permanent = 0)
-    { ENV_NONE, "GetSpellId", &LuaItem::GetSpellId },                       // :GetSpellId(index) - Returns spellID at given index (0 - 4)
-    { ENV_NONE, "GetSpellTrigger", &LuaItem::GetSpellTrigger },             // :GetSpellTrigger(index) - Returns spell trigger at given index (0 - 4)
-    { ENV_NONE, "GetItemLink", &LuaItem::GetItemLink },                     // :GetItemLink([localeID]) - Returns the shift clickable link of the item. Name translated if locale given and exists
-    { ENV_NONE, "GetClass", &LuaItem::GetClass },                           // :GetClass()
-    { ENV_NONE, "GetSubClass", &LuaItem::GetSubClass },                     // :GetSubClass()
-    { ENV_NONE, "GetName", &LuaItem::GetName },                             // :GetName()
-    { ENV_NONE, "GetDisplayId", &LuaItem::GetDisplayId },                   // :GetDisplayId()
-    { ENV_NONE, "GetQuality", &LuaItem::GetQuality },                       // :GetQuality()
-    { ENV_NONE, "GetBuyCount", &LuaItem::GetBuyCount },                     // :GetBuyCount()
-    { ENV_NONE, "GetBuyPrice", &LuaItem::GetBuyPrice },                     // :GetBuyPrice()
-    { ENV_NONE, "GetSellPrice", &LuaItem::GetSellPrice },                   // :GetSellPrice()
-    { ENV_NONE, "GetInventoryType", &LuaItem::GetInventoryType },           // :GetInventoryType()
-    { ENV_NONE, "GetAllowableClass", &LuaItem::GetAllowableClass },         // :GetAllowableClass()
-    { ENV_NONE, "GetAllowableRace", &LuaItem::GetAllowableRace },           // :GetAllowableRace()
-    { ENV_NONE, "GetItemLevel", &LuaItem::GetItemLevel },                   // :GetItemLevel()
-    { ENV_NONE, "GetRequiredLevel", &LuaItem::GetRequiredLevel },           // :GetRequiredLevel()
+    { ENV_BOTH, "GetOwnerGUID", &LuaItem::GetOwnerGUID },                   // :GetOwnerGUID() - Returns the owner's guid
+    { ENV_BOTH, "GetOwner", &LuaItem::GetOwner },                           // :GetOwner() - Returns the owner object (player)
+    { ENV_BOTH, "GetCount", &LuaItem::GetCount },                           // :GetCount() - Returns item stack count
+    { ENV_BOTH, "GetMaxStackCount", &LuaItem::GetMaxStackCount },           // :GetMaxStackCount() - Returns item max stack count
+    { ENV_BOTH, "GetSlot", &LuaItem::GetSlot },                             // :GetSlot() - returns the slot the item is in
+    { ENV_BOTH, "GetBagSlot", &LuaItem::GetBagSlot },                       // :GetBagSlot() - returns the bagslot of the bag the item is in
+    { ENV_BOTH, "GetEnchantmentId", &LuaItem::GetEnchantmentId },           // :GetEnchantmentId(enchant_slot) - Returns the enchantment in given slot. (permanent = 0)
+    { ENV_BOTH, "GetSpellId", &LuaItem::GetSpellId },                       // :GetSpellId(index) - Returns spellID at given index (0 - 4)
+    { ENV_BOTH, "GetSpellTrigger", &LuaItem::GetSpellTrigger },             // :GetSpellTrigger(index) - Returns spell trigger at given index (0 - 4)
+    { ENV_BOTH, "GetItemLink", &LuaItem::GetItemLink },                     // :GetItemLink([localeID]) - Returns the shift clickable link of the item. Name translated if locale given and exists
+    { ENV_BOTH, "GetClass", &LuaItem::GetClass },                           // :GetClass()
+    { ENV_BOTH, "GetSubClass", &LuaItem::GetSubClass },                     // :GetSubClass()
+    { ENV_BOTH, "GetName", &LuaItem::GetName },                             // :GetName()
+    { ENV_BOTH, "GetDisplayId", &LuaItem::GetDisplayId },                   // :GetDisplayId()
+    { ENV_BOTH, "GetQuality", &LuaItem::GetQuality },                       // :GetQuality()
+    { ENV_BOTH, "GetBuyCount", &LuaItem::GetBuyCount },                     // :GetBuyCount()
+    { ENV_BOTH, "GetBuyPrice", &LuaItem::GetBuyPrice },                     // :GetBuyPrice()
+    { ENV_BOTH, "GetSellPrice", &LuaItem::GetSellPrice },                   // :GetSellPrice()
+    { ENV_BOTH, "GetInventoryType", &LuaItem::GetInventoryType },           // :GetInventoryType()
+    { ENV_BOTH, "GetAllowableClass", &LuaItem::GetAllowableClass },         // :GetAllowableClass()
+    { ENV_BOTH, "GetAllowableRace", &LuaItem::GetAllowableRace },           // :GetAllowableRace()
+    { ENV_BOTH, "GetItemLevel", &LuaItem::GetItemLevel },                   // :GetItemLevel()
+    { ENV_BOTH, "GetRequiredLevel", &LuaItem::GetRequiredLevel },           // :GetRequiredLevel()
 #ifdef WOTLK
-    { ENV_NONE, "GetStatsCount", &LuaItem::GetStatsCount },                 // :GetStatsCount()
+    { ENV_BOTH, "GetStatsCount", &LuaItem::GetStatsCount },                 // :GetStatsCount()
 #endif
-    { ENV_NONE, "GetRandomProperty", &LuaItem::GetRandomProperty },         // :GetRandomProperty()
+    { ENV_BOTH, "GetRandomProperty", &LuaItem::GetRandomProperty },         // :GetRandomProperty()
 #ifndef CLASSIC
-    { ENV_NONE, "GetRandomSuffix", &LuaItem::GetRandomSuffix },             // :GetRandomSuffix()
+    { ENV_BOTH, "GetRandomSuffix", &LuaItem::GetRandomSuffix },             // :GetRandomSuffix()
 #endif
-    { ENV_NONE, "GetItemSet", &LuaItem::GetItemSet },                       // :GetItemSet()
-    { ENV_NONE, "GetBagSize", &LuaItem::GetBagSize },                       // :GetBagSize()
+    { ENV_BOTH, "GetItemSet", &LuaItem::GetItemSet },                       // :GetItemSet()
+    { ENV_BOTH, "GetBagSize", &LuaItem::GetBagSize },                       // :GetBagSize()
 
     // Setters
-    { ENV_NONE, "SetOwner", &LuaItem::SetOwner },                           // :SetOwner(player) - Sets the owner of the item
-    { ENV_NONE, "SetBinding", &LuaItem::SetBinding },                       // :SetBinding(bound) - Sets the item binding to true or false
-    { ENV_NONE, "SetCount", &LuaItem::SetCount },                           // :SetCount(count) - Sets the item count
+    { ENV_BOTH, "SetOwner", &LuaItem::SetOwner },                           // :SetOwner(player) - Sets the owner of the item
+    { ENV_BOTH, "SetBinding", &LuaItem::SetBinding },                       // :SetBinding(bound) - Sets the item binding to true or false
+    { ENV_BOTH, "SetCount", &LuaItem::SetCount },                           // :SetCount(count) - Sets the item count
 
     // Boolean
-    { ENV_NONE, "IsSoulBound", &LuaItem::IsSoulBound },                     // :IsSoulBound() - Returns true if the item is soulbound
+    { ENV_BOTH, "IsSoulBound", &LuaItem::IsSoulBound },                     // :IsSoulBound() - Returns true if the item is soulbound
 #if (!defined(TBC) && !defined(CLASSIC))
-    { ENV_NONE, "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },       // :IsBoundAccountWide() - Returns true if the item is account bound
+    { ENV_BOTH, "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },       // :IsBoundAccountWide() - Returns true if the item is account bound
 #endif
-    { ENV_NONE, "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },           // :IsBoundByEnchant() - Returns true if the item is bound with an enchant
-    { ENV_NONE, "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },       // :IsNotBoundToPlayer(player) - Returns true if the item is not bound with player
-    { ENV_NONE, "IsLocked", &LuaItem::IsLocked },                           // :IsLocked() - Returns true if the item is locked
-    { ENV_NONE, "IsBag", &LuaItem::IsBag },                                 // :IsBag() - Returns true if the item is a bag
+    { ENV_BOTH, "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },           // :IsBoundByEnchant() - Returns true if the item is bound with an enchant
+    { ENV_BOTH, "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },       // :IsNotBoundToPlayer(player) - Returns true if the item is not bound with player
+    { ENV_BOTH, "IsLocked", &LuaItem::IsLocked },                           // :IsLocked() - Returns true if the item is locked
+    { ENV_BOTH, "IsBag", &LuaItem::IsBag },                                 // :IsBag() - Returns true if the item is a bag
 #ifndef CLASSIC
-    { ENV_NONE, "IsCurrencyToken", &LuaItem::IsCurrencyToken },             // :IsCurrencyToken() - Returns true if the item is a currency token
+    { ENV_BOTH, "IsCurrencyToken", &LuaItem::IsCurrencyToken },             // :IsCurrencyToken() - Returns true if the item is a currency token
 #endif
-    { ENV_NONE, "IsNotEmptyBag", &LuaItem::IsNotEmptyBag },                 // :IsNotEmptyBag() - Returns true if the item is not an empty bag
-    { ENV_NONE, "IsBroken", &LuaItem::IsBroken },                           // :IsBroken() - Returns true if the item is broken
-    { ENV_NONE, "CanBeTraded", &LuaItem::CanBeTraded },                     // :CanBeTraded() - Returns true if the item can be traded
-    { ENV_NONE, "IsInTrade", &LuaItem::IsInTrade },                         // :IsInTrade() - Returns true if the item is in trade
-    { ENV_NONE, "IsInBag", &LuaItem::IsInBag },                             // :IsInBag() - Returns true if the item is in a bag
-    { ENV_NONE, "IsEquipped", &LuaItem::IsEquipped },                       // :IsEquipped() - Returns true if the item is equipped
-    { ENV_NONE, "HasQuest", &LuaItem::HasQuest },                           // :HasQuest(questId) - Returns true if the item starts the quest
-    { ENV_NONE, "IsPotion", &LuaItem::IsPotion },                           // :IsPotion() - Returns true if the item is a potion
+    { ENV_BOTH, "IsNotEmptyBag", &LuaItem::IsNotEmptyBag },                 // :IsNotEmptyBag() - Returns true if the item is not an empty bag
+    { ENV_BOTH, "IsBroken", &LuaItem::IsBroken },                           // :IsBroken() - Returns true if the item is broken
+    { ENV_BOTH, "CanBeTraded", &LuaItem::CanBeTraded },                     // :CanBeTraded() - Returns true if the item can be traded
+    { ENV_BOTH, "IsInTrade", &LuaItem::IsInTrade },                         // :IsInTrade() - Returns true if the item is in trade
+    { ENV_BOTH, "IsInBag", &LuaItem::IsInBag },                             // :IsInBag() - Returns true if the item is in a bag
+    { ENV_BOTH, "IsEquipped", &LuaItem::IsEquipped },                       // :IsEquipped() - Returns true if the item is equipped
+    { ENV_BOTH, "HasQuest", &LuaItem::HasQuest },                           // :HasQuest(questId) - Returns true if the item starts the quest
+    { ENV_BOTH, "IsPotion", &LuaItem::IsPotion },                           // :IsPotion() - Returns true if the item is a potion
 #ifndef CATA
-    { ENV_NONE, "IsWeaponVellum", &LuaItem::IsWeaponVellum },               // :IsWeaponVellum() - Returns true if the item is a weapon vellum
-    { ENV_NONE, "IsArmorVellum", &LuaItem::IsArmorVellum },                 // :IsArmorVellum() - Returns true if the item is an armor vellum
+    { ENV_BOTH, "IsWeaponVellum", &LuaItem::IsWeaponVellum },               // :IsWeaponVellum() - Returns true if the item is a weapon vellum
+    { ENV_BOTH, "IsArmorVellum", &LuaItem::IsArmorVellum },                 // :IsArmorVellum() - Returns true if the item is an armor vellum
 #endif
-    { ENV_NONE, "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },   // :IsConjuredConsumable() - Returns true if the item is a conjured consumable
+    { ENV_BOTH, "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },   // :IsConjuredConsumable() - Returns true if the item is a conjured consumable
     // { "IsRefundExpired", &LuaItem::IsRefundExpired },          // :IsRefundExpired() - Returns true if the item's refund time has expired
-    { ENV_NONE, "SetEnchantment", &LuaItem::SetEnchantment },               // :SetEnchantment(enchantid, enchantmentslot) - Sets a new enchantment for the item. Returns true on success
-    { ENV_NONE, "ClearEnchantment", &LuaItem::ClearEnchantment },           // :ClearEnchantment(enchantmentslot) - Removes the enchantment from the item if one exists. Returns true on success
+    { ENV_BOTH, "SetEnchantment", &LuaItem::SetEnchantment },               // :SetEnchantment(enchantid, enchantmentslot) - Sets a new enchantment for the item. Returns true on success
+    { ENV_BOTH, "ClearEnchantment", &LuaItem::ClearEnchantment },           // :ClearEnchantment(enchantmentslot) - Removes the enchantment from the item if one exists. Returns true on success
 
     // Other
-    { ENV_NONE, "SaveToDB", &LuaItem::SaveToDB },                           // :SaveToDB() - Saves to database
+    { ENV_BOTH, "SaveToDB", &LuaItem::SaveToDB },                           // :SaveToDB() - Saves to database
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -998,15 +998,15 @@ ElunaRegister<Spell> SpellMethods[] =
     { ENV_BOTH, "GetTarget", &LuaSpell::GetTarget },
 
     // Setters
-    { ENV_NONE, "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
+    { ENV_BOTH, "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
 
     // Boolean
-    { ENV_NONE, "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
+    { ENV_BOTH, "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
 
     // Other
-    { ENV_NONE, "Cancel", &LuaSpell::Cancel },
-    { ENV_NONE, "Cast", &LuaSpell::Cast },
-    { ENV_NONE, "Finish", &LuaSpell::Finish },
+    { ENV_BOTH, "Cancel", &LuaSpell::Cancel },
+    { ENV_BOTH, "Cast", &LuaSpell::Cast },
+    { ENV_BOTH, "Finish", &LuaSpell::Finish },
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -1114,16 +1114,16 @@ ElunaRegister<Guild> GuildMethods[] =
 ElunaRegister<Vehicle> VehicleMethods[] =
 {
     // Getters
-    { ENV_NONE, "GetOwner", &LuaVehicle::GetOwner },                    // :GetOwner() - Returns the the vehicle unit
-    { ENV_NONE, "GetEntry", &LuaVehicle::GetEntry },                    // :GetEntry() - Returns vehicle ID
-    { ENV_NONE, "GetPassenger", &LuaVehicle::GetPassenger },            // :GetPassenger(seatId) - Returns the passenger by seatId
+    { ENV_BOTH, "GetOwner", &LuaVehicle::GetOwner },                    // :GetOwner() - Returns the the vehicle unit
+    { ENV_BOTH, "GetEntry", &LuaVehicle::GetEntry },                    // :GetEntry() - Returns vehicle ID
+    { ENV_BOTH, "GetPassenger", &LuaVehicle::GetPassenger },            // :GetPassenger(seatId) - Returns the passenger by seatId
 
     // Boolean
-    { ENV_NONE, "IsOnBoard", &LuaVehicle::IsOnBoard },                  // :IsOnBoard(unit) - Returns true if the unit is on board
+    { ENV_BOTH, "IsOnBoard", &LuaVehicle::IsOnBoard },                  // :IsOnBoard(unit) - Returns true if the unit is on board
 
     // Other
-    { ENV_NONE, "AddPassenger", &LuaVehicle::AddPassenger },            // :AddPassenger(passenger, seatId) - Adds a vehicle passenger
-    { ENV_NONE, "RemovePassenger", &LuaVehicle::RemovePassenger },      // :RemovePassenger(passenger) - Removes the passenger from the vehicle
+    { ENV_BOTH, "AddPassenger", &LuaVehicle::AddPassenger },            // :AddPassenger(passenger, seatId) - Adds a vehicle passenger
+    { ENV_BOTH, "RemovePassenger", &LuaVehicle::RemovePassenger },      // :RemovePassenger(passenger) - Removes the passenger from the vehicle
 
     { ENV_NONE, nullptr, nullptr },
 };
@@ -1227,12 +1227,12 @@ ElunaRegister<Map> MapMethods[] =
 
 ElunaRegister<Corpse> CorpseMethods[] =
 {
-    { ENV_NONE, "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
-    { ENV_NONE, "GetGhostTime", &LuaCorpse::GetGhostTime },
-    { ENV_NONE, "GetType", &LuaCorpse::GetType },
-    { ENV_NONE, "ResetGhostTime", &LuaCorpse::ResetGhostTime },
-    { ENV_NONE, "SaveToDB", &LuaCorpse::SaveToDB },
-    { ENV_NONE, "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
+    { ENV_BOTH, "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
+    { ENV_BOTH, "GetGhostTime", &LuaCorpse::GetGhostTime },
+    { ENV_BOTH, "GetType", &LuaCorpse::GetType },
+    { ENV_BOTH, "ResetGhostTime", &LuaCorpse::ResetGhostTime },
+    { ENV_BOTH, "SaveToDB", &LuaCorpse::SaveToDB },
+    { ENV_BOTH, "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
 
     { ENV_NONE, nullptr, nullptr }
 };
@@ -1271,16 +1271,16 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
 
 ElunaRegister<uint64> uint64Methods[] =
 {
-    { ENV_NONE, "__add", &Luauint64::__add },
-    { ENV_NONE, "__sub", &Luauint64::__sub },
-    { ENV_NONE, "__mul", &Luauint64::__mul },
-    { ENV_NONE, "__div", &Luauint64::__div },
-    { ENV_NONE, "__mod", &Luauint64::__mod },
-    { ENV_NONE, "__pow", &Luauint64::__pow },
-    { ENV_NONE, "__eq", &Luauint64::__eq },
-    { ENV_NONE, "__lt", &Luauint64::__lt },
-    { ENV_NONE, "__le", &Luauint64::__le },
-    { ENV_NONE, "__tostring", &Luauint64::__tostring },
+    { ENV_BOTH, "__add", &Luauint64::__add },
+    { ENV_BOTH, "__sub", &Luauint64::__sub },
+    { ENV_BOTH, "__mul", &Luauint64::__mul },
+    { ENV_BOTH, "__div", &Luauint64::__div },
+    { ENV_BOTH, "__mod", &Luauint64::__mod },
+    { ENV_BOTH, "__pow", &Luauint64::__pow },
+    { ENV_BOTH, "__eq", &Luauint64::__eq },
+    { ENV_BOTH, "__lt", &Luauint64::__lt },
+    { ENV_BOTH, "__le", &Luauint64::__le },
+    { ENV_BOTH, "__tostring", &Luauint64::__tostring },
 
     { ENV_NONE, nullptr, nullptr }
 };

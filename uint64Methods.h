@@ -16,52 +16,52 @@
 namespace Luauint64
 {
     // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
-    int __add(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __add(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) + Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __sub(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __sub(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) - Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __mul(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __mul(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) * Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __div(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __div(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) / Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __mod(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __mod(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) % Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __pow(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __pow(lua_State* L, uint64* u)
     {
         Eluna::Push(L, static_cast<uint64>(powl(static_cast<long double>(*u), static_cast<long double>(Eluna::CHECKVAL<uint64>(L, 2)))));
         return 1;
     }
-    int __eq(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __eq(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) == Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __lt(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __lt(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) < Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __le(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __le(lua_State* L, uint64* u)
     {
         Eluna::Push(L, (*u) <= Eluna::CHECKVAL<uint64>(L, 2));
         return 1;
     }
-    int __tostring(Eluna* /*E*/, lua_State* L, uint64* u)
+    int __tostring(lua_State* L, uint64* u)
     {
         Eluna::Push(L, std::to_string(*u));
         return 1;

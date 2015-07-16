@@ -33,15 +33,14 @@ public:
     {
         ElunaEnvironments env;
         const char* name;
-        int(*mfunc)(Eluna*, lua_State*);
+        int(*mfunc)(lua_State*);
     };
 
     static int thunk(lua_State* L)
     {
         ElunaRegister* l = static_cast<ElunaRegister*>(lua_touserdata(L, lua_upvalueindex(1)));
-        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
         int args = lua_gettop(L);
-        int expected = l->mfunc(E, L);
+        int expected = l->mfunc(L);
         args = lua_gettop(L) - args;
         if (args < 0 || args > expected)
         {
@@ -64,8 +63,7 @@ public:
         {
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
-            lua_pushlightuserdata(E->L, (void*)E);
-            lua_pushcclosure(E->L, thunk, 2);
+            lua_pushcclosure(E->L, thunk, 1);
             lua_settable(E->L, -3);
         }
 
@@ -128,7 +126,7 @@ struct ElunaRegister
 {
     ElunaEnvironments env;
     const char* name;
-    int(*mfunc)(Eluna*, lua_State*, T*);
+    int(*mfunc)(lua_State*, T*);
 };
 
 template<typename T>
@@ -229,8 +227,7 @@ public:
         {
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
-            lua_pushlightuserdata(E->L, (void*)E);
-            lua_pushcclosure(E->L, CallMethod, 2);
+            lua_pushcclosure(E->L, CallMethod, 1);
             lua_settable(E->L, -3);
         }
 
@@ -245,9 +242,11 @@ public:
             return 1;
         }
 
+        void* obj_voidptr = static_cast<void*>(const_cast<T*>(obj));
+
         lua_getglobal(L, ELUNA_OBJECT_STORE);
         ASSERT(lua_istable(L, -1));
-        lua_pushfstring(L, "%p", obj);
+        lua_pushlightuserdata(L, obj_voidptr);
         lua_gettable(L, -2);
         if (ElunaObject* elunaObj = Eluna::CHECKTYPE(L, -1, tname, false))
         {
@@ -270,7 +269,7 @@ public:
             lua_pushnil(L);
             return 1;
         }
-        *ptrHold = new ElunaObject((void*)(obj), manageMemory);
+        *ptrHold = new ElunaObject(obj_voidptr, manageMemory);
 
         // Set metatable for it
         luaL_getmetatable(L, tname);
@@ -283,7 +282,7 @@ public:
         }
         lua_setmetatable(L, -2);
 
-        lua_pushfstring(L, "%p", obj);
+        lua_pushlightuserdata(L, obj_voidptr);
         lua_pushvalue(L, -2);
         lua_settable(L, -4);
         lua_remove(L, -2);
@@ -336,9 +335,8 @@ public:
         if (!obj)
             return 0;
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
-        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
         int top = lua_gettop(L);
-        int expected = l->mfunc(E, L, obj);
+        int expected = l->mfunc(L, obj);
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {

@@ -113,7 +113,9 @@ struct LuaScript
     std::string modulepath;
 };
 
+// defines for global variables used internally - do not edit these in the lua state!
 #define ELUNA_OBJECT_STORE  "Eluna Object Store"
+#define ELUNA_STATE_PTR     "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
 class Eluna
@@ -277,6 +279,16 @@ public:
     static void ReloadEluna() { LOCK_ELUNA; reload = true; }
     static bool ShouldReload() { LOCK_ELUNA; return reload; }
     static bool IsInitialized() { LOCK_ELUNA; return initialized; }
+
+    static Eluna* GetEluna(lua_State* L)
+    {
+        lua_getglobal(L, ELUNA_STATE_PTR);
+        ASSERT(lua_islightuserdata(L, -1));
+        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        ASSERT(E);
+        return E;
+    }
 
     // Static pushes, can be used by anything, including methods.
     static void Push(lua_State* luastate); // nil
