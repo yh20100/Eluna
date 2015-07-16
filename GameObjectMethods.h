@@ -154,7 +154,7 @@ namespace LuaGameObject
      *
      * @return uint32 dbguid
      */
-    int GetDBTableGUIDLow(Eluna* /*E*/, lua_State* L, GameObject* go)
+    int GetDBTableGUIDLow(lua_State* L, GameObject* go)
     {
 #ifdef TRINITY
         Eluna::Push(L, go->GetDBTableGUIDLow());

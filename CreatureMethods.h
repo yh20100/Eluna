@@ -842,7 +842,7 @@ namespace LuaCreature
      *
      * @return uint32 dbguid
      */
-    int GetDBTableGUIDLow(Eluna* /*E*/, lua_State* L, Creature* creature)
+    int GetDBTableGUIDLow(lua_State* L, Creature* creature)
     {
 #ifdef TRINITY
         Eluna::Push(L, creature->GetDBTableGUIDLow());
