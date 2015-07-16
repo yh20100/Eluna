@@ -1079,12 +1079,17 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns the combo target GUID.
+     *
+     * @return uint64 reputationAmt
+     */
     int GetComboTarget(lua_State* L, Player* player)
     {
 #ifndef TRINITY
-        Eluna::Push(L, player->GetMap()->GetUnit(player->GetComboTargetGuid()));
+        Eluna::Push(L, player->GetComboTargetGuid());
 #else
-        Eluna::Push(L, ObjectAccessor::GetUnit(*player, player->GetComboTarget()));
+        Eluna::Push(L, player->GetComboTarget());
 #endif
         return 1;
     }

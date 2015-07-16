@@ -62,21 +62,6 @@ namespace LuaGuild
     }
 
     /**
-     * Finds and returns the [Guild] leader by their GUID if logged in
-     *
-     * @return [Player] leader
-     */
-    int GetLeader(lua_State* L, Guild* guild)
-    {
-#ifndef TRINITY
-        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
-#else
-        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
-#endif
-        return 1;
-    }
-
-    /**
      * Returns [Guild] leader GUID
      *
      * @return uint64 leaderGUID

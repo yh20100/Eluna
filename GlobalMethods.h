@@ -2152,19 +2152,6 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Adds a [Corpse] to the world.
-     *
-     * @param [Corpse] corpse : [Corpse] to add
-     */
-    int AddCorpse(lua_State* L)
-    {
-        Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
-
-        eObjectAccessor->AddCorpse(corpse);
-        return 0;
-    }
-
-    /**
      * Removes a [Corpse] from the world.
      *
      * @param [Corpse] corpse : [Corpse] to remove
@@ -2199,16 +2186,6 @@ namespace LuaGlobalFunctions
     int RemoveOldCorpses(lua_State* /*L*/)
     {
         eObjectAccessor->RemoveOldCorpses();
-        return 0;
-    }
-
-    /**
-     * S
-     */
-    int SendStateMessage(lua_State* /*L*/)
-    {
-        eObjectAccessor->RemoveOldCorpses();
-        // errrr;
         return 0;
     }
 
