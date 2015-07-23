@@ -43,7 +43,7 @@ void ElunaEventProcessor::Update(uint32 diff, Eluna* E, WorldObject* obj)
 
 void ElunaEventProcessor::AddEvent(LuaEvent const& luaEvent)
 {
-    ASSERT(eventMap.find(luaEvent.funcRef) != eventMap.end());
+    ASSERT(eventMap.find(luaEvent.funcRef) == eventMap.end());
     eventMap[luaEvent.funcRef] = luaEvent;
     eventList.insert(std::make_pair(m_time + luaEvent.delay, eventMap[luaEvent.funcRef]));
 }
@@ -111,7 +111,7 @@ void EventMgr::UpdateGlobal(uint32 diff)
     globalProcessor.Update(diff, owner, nullptr);
 }
 
-void EventMgr::AddEvent(ObjectGuid guid, int funcRef, uint32 delay, uint32 repeats)
+void EventMgr::AddEvent(ObjectGuid const& guid, int funcRef, uint32 delay, uint32 repeats)
 {
     processorMap[guid].AddEvent(funcRef, delay, repeats);
 }

@@ -46,7 +46,9 @@ class ElunaEventProcessor
 
 public:
 
-    ElunaEventProcessor() : m_time(0) { }
+    ElunaEventProcessor() : m_time(0)
+    {
+    }
 
     // obj can be nullptr for global events
     void Update(uint32 diff, Eluna* E, WorldObject* obj);
@@ -88,7 +90,7 @@ public:
     void Update(uint32 diff, WorldObject* obj);
     void UpdateGlobal(uint32 diff);
 
-    void AddEvent(ObjectGuid guid, int funcRef, uint32 delay, uint32 repeats);
+    void AddEvent(ObjectGuid const& guid, int funcRef, uint32 delay, uint32 repeats);
     void AddGlobalEvent(int funcRef, uint32 delay, uint32 repeats);
 };
 

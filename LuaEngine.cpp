@@ -115,7 +115,8 @@ void Eluna::LoadScriptPaths()
 void Eluna::__ReloadEluna()
 {
     // Remove all timed events
-    eventMgr->DeleteAll();
+    delete eventMgr;
+    eventMgr = new EventMgr(this);
 
     // Close lua
     CloseLua();
