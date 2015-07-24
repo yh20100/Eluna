@@ -95,6 +95,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 }
 
 // weather
+/*
 void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float grade)
 {
     START_HOOK(WEATHER_EVENT_ON_CHANGE);
@@ -103,6 +104,7 @@ void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float gr
     Push(grade);
     CallAllFunctions(ServerEventBindings, key);
 }
+*/
 
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
@@ -249,7 +251,7 @@ void Eluna::OnWorldUpdate(uint32 diff)
             _ReloadEluna();
     }
 
-    eventMgr->UpdateGlobal(diff);
+    GetEventMgr()->UpdateGlobal(diff);
 
     START_HOOK(WORLD_EVENT_ON_UPDATE);
     Push(diff);
@@ -301,7 +303,7 @@ void Eluna::OnPlayerLeave(Map* map, Player* player)
 
 void Eluna::OnUpdate(Map* map, uint32 diff)
 {
-    map->GetEluna()->eventMgr->UpdateGlobal(diff);
+    map->GetEluna()->GetEventMgr()->UpdateGlobal(diff);
 
     START_HOOK(MAP_EVENT_ON_UPDATE);
     Push(map);

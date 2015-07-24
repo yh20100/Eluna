@@ -39,13 +39,16 @@ public:
     static int thunk(lua_State* L)
     {
         ElunaRegister* l = static_cast<ElunaRegister*>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (Eluna::GetEluna(L)->current_thread_id != std::this_thread::get_id())
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Race condition using global function. Report to devs with this message and details about what you were doing - Info: %s", l->name);
+        }
         int args = lua_gettop(L);
         int expected = l->mfunc(L);
         args = lua_gettop(L) - args;
         if (args < 0 || args > expected)
         {
             ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-            ASSERT(false);
         }
         for (; args < expected; ++args)
             lua_pushnil(L);
@@ -61,6 +64,19 @@ public:
 
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
         {
+            if (methodTable->env >= ENV_MAX || methodTable->env < ENV_NONE)
+            {
+                ASSERT(false);
+            }
+            else if (methodTable->env == ENV_NONE)
+                continue;
+            else if (methodTable->env != ENV_BOTH)
+            {
+                if (!E->owner && methodTable->env == ENV_MAP)
+                    continue;
+                else if (E->owner && methodTable->env == ENV_WORLD)
+                    continue;
+            }
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, thunk, 1);
@@ -225,6 +241,19 @@ public:
 
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
         {
+            if (methodTable->env >= ENV_MAX || methodTable->env < ENV_NONE)
+            {
+                ASSERT(false);
+            }
+            else if (methodTable->env == ENV_NONE)
+                continue;
+            else if (methodTable->env != ENV_BOTH)
+            {
+                if (!E->owner && methodTable->env == ENV_MAP)
+                    continue;
+                else if (E->owner && methodTable->env == ENV_WORLD)
+                    continue;
+            }
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, CallMethod, 1);
@@ -335,13 +364,16 @@ public:
         if (!obj)
             return 0;
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (Eluna::GetEluna(L)->current_thread_id != std::this_thread::get_id())
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Race condition using member function. Report to devs with this message and details about what you were doing - Info: %s", l->name);
+        }
         int top = lua_gettop(L);
         int expected = l->mfunc(L, obj);
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {
             ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-            ASSERT(false);
         }
         if (args == expected)
             return expected;

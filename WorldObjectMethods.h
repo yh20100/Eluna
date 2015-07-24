@@ -754,7 +754,7 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            obj->GetMap()->GetEluna()->eventMgr->AddEvent(obj->GET_GUID(), functionRef, delay, repeats);
+            ElunaDo(obj)->GetEventMgr()->AddEvent(obj->GET_GUID(), functionRef, delay, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;
@@ -768,7 +768,7 @@ namespace LuaWorldObject
     int RemoveEventById(lua_State* L, WorldObject* obj)
     {
         int eventId = Eluna::CHECKVAL<int>(L, 2);
-        obj->GetMap()->GetEluna()->eventMgr->Delete(obj->GET_GUID(), eventId);
+        ElunaDo(obj)->GetEventMgr()->Delete(obj->GET_GUID(), eventId);
         return 0;
     }
 
@@ -778,7 +778,7 @@ namespace LuaWorldObject
      */
     int RemoveEvents(lua_State* /*L*/, WorldObject* obj)
     {
-        obj->GetMap()->GetEluna()->eventMgr->Delete(obj->GET_GUID());
+        ElunaDo(obj)->GetEventMgr()->Delete(obj->GET_GUID());
         return 0;
     }
 

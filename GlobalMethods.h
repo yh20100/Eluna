@@ -1285,7 +1285,7 @@ namespace LuaGlobalFunctions
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            Eluna::GetEluna(L)->eventMgr->AddGlobalEvent(functionRef, delay, repeats);
+            Eluna::GetEluna(L)->GetEventMgr()->AddGlobalEvent(functionRef, delay, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;
@@ -1300,7 +1300,7 @@ namespace LuaGlobalFunctions
     {
         int eventId = Eluna::CHECKVAL<int>(L, 1);
 
-        Eluna::GetEluna(L)->eventMgr->DeleteGlobal(eventId);
+        Eluna::GetEluna(L)->GetEventMgr()->DeleteGlobal(eventId);
         return 0;
     }
 
@@ -1310,7 +1310,7 @@ namespace LuaGlobalFunctions
      */
     int RemoveEvents(lua_State* L)
     {
-        Eluna::GetEluna(L)->eventMgr->DeleteGlobal();
+        Eluna::GetEluna(L)->GetEventMgr()->DeleteGlobal();
         return 0;
     }
 

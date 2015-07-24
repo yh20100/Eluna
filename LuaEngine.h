@@ -11,6 +11,7 @@
 #include "SharedDefines.h"
 #include "DBCEnums.h"
 #include <mutex>
+#include <thread>
 #include <unordered_set>
 
 #include "Group.h"
@@ -247,9 +248,17 @@ private:
 public:
     static Eluna* GEluna;
     static MsgQueue* msgque;
+    static std::thread::id const main_thread_id;
+    std::thread::id current_thread_id;
+
+    static Eluna* GetGEluna(const char* info);
 
     lua_State* L;
     EventMgr* eventMgr;
+    EventMgr* GetEventMgr() const
+    {
+        return eventMgr;
+    }
     Map* const owner;
     std::set<std::string> stateChannels;
 
@@ -280,6 +289,7 @@ public:
     static bool ShouldReload() { LOCK_ELUNA; return reload; }
     static bool IsInitialized() { LOCK_ELUNA; return initialized; }
 
+    // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)
     {
         lua_getglobal(L, ELUNA_STATE_PTR);
@@ -497,7 +507,7 @@ public:
     bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
 
     /* Weather */
-    void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
+    // void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
     /* Auction House */
     void OnAdd(AuctionHouseObject* ah, AuctionEntry* entry);
@@ -581,5 +591,6 @@ template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);
 template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error);
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
 
-#define sEluna Eluna::GEluna
+#define sEluna(info) Eluna::GetGEluna(info)
+#define ElunaDo(_obj_) if (_obj_ && _obj_->FindMap()) _obj_->FindMap()->GetEluna()
 #endif

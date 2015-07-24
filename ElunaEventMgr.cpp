@@ -19,33 +19,36 @@ void ElunaEventProcessor::Update(uint32 diff, Eluna* E, WorldObject* obj)
     m_time += diff;
     for (EventList::iterator it = eventList.begin(); it != eventList.end() && it->first <= m_time; it = eventList.begin())
     {
-        LuaEvent& luaEvent = it->second;
+        LuaEvent* luaEvent = it->second;
         eventList.erase(it);
 
-        if (!luaEvent.abort)
+        if (!luaEvent->abort)
         {
-            bool remove = luaEvent.repeats == 1;
+            bool remove = luaEvent->repeats == 1;
             if (!remove)
-                AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
+                AddEvent(*luaEvent, true); // Reschedule before calling incase RemoveEvents used
 
             // Call the timed event
-            E->OnTimedEvent(luaEvent.funcRef, luaEvent.delay, luaEvent.repeats ? luaEvent.repeats-- : luaEvent.repeats, obj);
+            E->OnTimedEvent(luaEvent->funcRef, luaEvent->delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
         }
 
         // Event should be deleted (executed last time or set to be aborted)
-        luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent.funcRef);
-        eventMap.erase(luaEvent.funcRef);
+        luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
+        eventMap.erase(luaEvent->funcRef);
     }
 }
 
-void ElunaEventProcessor::AddEvent(LuaEvent const& luaEvent)
+void ElunaEventProcessor::AddEvent(LuaEvent const& luaEvent, bool reschedule /*= false*/)
 {
-    ASSERT(eventMap.find(luaEvent.funcRef) == eventMap.end());
+    if (!reschedule)
+    {
+        ASSERT(eventMap.find(luaEvent.funcRef) == eventMap.end());
+    }
     eventMap[luaEvent.funcRef] = luaEvent;
-    eventList.insert(std::make_pair(m_time + luaEvent.delay, eventMap[luaEvent.funcRef]));
+    eventList.insert(std::make_pair(m_time + luaEvent.delay, &eventMap[luaEvent.funcRef]));
 }
 
 void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
@@ -56,8 +59,8 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
 void EventMgr::DeleteAll()
 {
     DeleteGlobal();
-    for (auto&& processor : processorMap)
-        for (auto&& luaEvent : processor.second.eventMap)
+    for (auto& processor : processorMap)
+        for (auto& luaEvent : processor.second.eventMap)
             luaEvent.second.abort = true;
 }
 
@@ -77,7 +80,7 @@ void EventMgr::Delete(ObjectGuid const& guid)
     auto it = processorMap.find(guid);
     if (it == processorMap.end())
         return;
-    for (auto&& luaEvent : it->second.eventMap)
+    for (auto& luaEvent : it->second.eventMap)
         luaEvent.second.abort = true;
 }
 
@@ -91,7 +94,7 @@ void EventMgr::DeleteGlobal(int funcref)
 
 void EventMgr::DeleteGlobal()
 {
-    for (auto&& luaEvent : globalProcessor.eventMap)
+    for (auto& luaEvent : globalProcessor.eventMap)
         luaEvent.second.abort = true;
 }
 

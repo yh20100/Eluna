@@ -40,11 +40,28 @@ std::string Eluna::lua_requirepath;
 Eluna::InstanceHolder Eluna::instances;
 Eluna* Eluna::GEluna = nullptr;
 MsgQueue* Eluna::msgque = nullptr;
+std::thread::id const Eluna::main_thread_id = std::this_thread::get_id();
 bool Eluna::reload = false;
 bool Eluna::initialized = false;
 Eluna::LockType Eluna::lock;
 
 extern void RegisterFunctions(Eluna* E);
+
+Eluna* Eluna::GetGEluna(const char* info)
+{
+    if (main_thread_id != std::this_thread::get_id())
+    {
+        if (info)
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Race condition accessing GEluna. Report to devs with this message and details about what you were doing - Info: %s", info);
+        }
+        else
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Race condition accessing GEluna. Report to devs with this message and details about what you were doing");
+        }
+    }
+    return Eluna::GEluna;
+}
 
 void Eluna::Initialize()
 {
@@ -114,15 +131,17 @@ void Eluna::LoadScriptPaths()
 
 void Eluna::__ReloadEluna()
 {
-    // Remove all timed events
-    delete eventMgr;
-    eventMgr = new EventMgr(this);
-
     // Close lua
     CloseLua();
 
+    delete eventMgr;
+    eventMgr = nullptr;
+
     // Open new lua and libaraies
     OpenLua();
+
+    // Remove all timed events
+    eventMgr = new EventMgr(this);
 
     // Run scripts from loaded paths
     RunScripts();
@@ -140,7 +159,7 @@ void Eluna::_ReloadEluna()
     // Reload script paths
     LoadScriptPaths();
 
-    for (auto&& e : instances.GetMap())
+    for (auto& e : instances.GetMap())
         e->__ReloadEluna();
 
     reload = false;
@@ -154,6 +173,7 @@ owner(map),
 
 L(nullptr),
 eventMgr(nullptr),
+current_thread_id(std::this_thread::get_id()),
 
 ServerEventBindings(nullptr),
 PlayerEventBindings(nullptr),

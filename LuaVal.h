@@ -205,7 +205,7 @@ public:
                 lua_newtable(L);
                 int tbl = lua_gettop(L);
                 uint32 i = 0;
-                for (auto&& v : *tbl_ptr)
+                for (auto& v : *tbl_ptr)
                 {
                     v.first.Push(L);
                     v.second.Push(L);
@@ -380,7 +380,7 @@ private:
             {
                 TableRefs refs;
                 const LuaVal v = Check(L, index, refs);
-                for (auto&& r : refs)
+                for (auto& r : refs)
                     luaL_unref(L, LUA_REGISTRYINDEX, r);
                 return v;
             }
@@ -403,7 +403,7 @@ private:
         if (lua_type(L, index) != LUA_TTABLE)
             return Check(L, index);
 
-        for (auto&& r : refs)
+        for (auto& r : refs)
         {
             if (r == LUA_NOREF || r == LUA_REFNIL)
                 continue;
