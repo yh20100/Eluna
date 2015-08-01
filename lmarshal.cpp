@@ -85,9 +85,11 @@ static int buf_write(lua_State* L, const char* str, size_t len, mar_Buffer *buf)
         while (new_size - cur_head <= len) {
             new_size = new_size << 1;
         }
-        if (!(buf->data = (char*)realloc(buf->data, new_size))) {
-            luaL_error(L, "Out of memory!");
+        char* data = (char*)realloc(buf->data, new_size);
+        if (!data) {
+            return luaL_error(L, "Out of memory!");
         }
+        buf->data = data;
         buf->size = new_size;
     }
     memcpy(&buf->data[buf->head], str, len);
@@ -217,7 +219,7 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
 
             lua_pushvalue(L, -1);
             buf_init(L, &rec_buf);
-            lua_dump(L, (lua_Writer)buf_write, &rec_buf);
+            lua_dump(L, (lua_Writer)buf_write, &rec_buf, true);
 
             buf_write(L, (const char*)&tag, MAR_CHR, buf);
             buf_write(L, (const char*)&rec_buf.head, MAR_I32, buf);

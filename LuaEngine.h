@@ -68,6 +68,7 @@ class InstanceData;
 #endif
 class ElunaInstanceAI;
 class Item;
+class Map;
 class Pet;
 class Player;
 class Quest;
@@ -174,8 +175,6 @@ private:
     uint8 push_counter;
     bool enabled;
 
-    Map* owner;
-
     // Map from instance ID -> Lua table ref
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
@@ -227,23 +226,6 @@ private:
     {
         return CallAllFunctionsBool<K, K>(bindings, nullptr, key, key, default_value);
     }
-
-    // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
 public:
     static Eluna* GEluna;

@@ -877,9 +877,9 @@ namespace LuaGlobalFunctions
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
-    int RegisterMapEvent(Eluna* E, lua_State* L)
+    int RegisterMapEvent(lua_State* L)
     {
-        return RegisterEntryHelper(E, L, Hooks::REGTYPE_MAP);
+        return RegisterEntryHelper(L, Hooks::REGTYPE_MAP);
     }
 
     /**
@@ -904,9 +904,9 @@ namespace LuaGlobalFunctions
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
-    int RegisterInstanceEvent(Eluna* E, lua_State* L)
+    int RegisterInstanceEvent(lua_State* L)
     {
-        return RegisterEntryHelper(E, L, Hooks::REGTYPE_INSTANCE);
+        return RegisterEntryHelper(L, Hooks::REGTYPE_INSTANCE);
     }
 
     /**
@@ -2775,7 +2775,7 @@ namespace LuaGlobalFunctions
      * @param uint32 map_id : the ID of a [Map]
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerGossipEvent]
      */
-    int ClearMapEvents(Eluna* E, lua_State* L)
+    int ClearMapEvents(lua_State* L)
     {
         typedef EntryKey<Hooks::InstanceEvents> Key;
 
@@ -2784,13 +2784,13 @@ namespace LuaGlobalFunctions
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
             for (uint32 i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
-                E->MapEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
+                Eluna::GetEluna(L)->MapEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
         }
         else
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
             uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
-            E->MapEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
+            Eluna::GetEluna(L)->MapEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
         }
 
         return 0;
@@ -2808,7 +2808,7 @@ namespace LuaGlobalFunctions
      * @param uint32 entry : the ID of an instance of a [Map]
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerGossipEvent]
      */
-    int ClearInstanceEvents(Eluna* E, lua_State* L)
+    int ClearInstanceEvents(lua_State* L)
     {
         typedef EntryKey<Hooks::InstanceEvents> Key;
 
@@ -2817,13 +2817,13 @@ namespace LuaGlobalFunctions
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
             for (uint32 i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
-                E->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
+                Eluna::GetEluna(L)->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
         }
         else
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
             uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
-            E->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
+            Eluna::GetEluna(L)->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
         }
 
         return 0;

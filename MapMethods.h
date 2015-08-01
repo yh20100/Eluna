@@ -284,7 +284,7 @@ namespace LuaMap
      *
      * @return table instance_data : instance data table, or `nil`
      */
-    int GetInstanceData(Eluna* E, lua_State* L, Map* map)
+    int GetInstanceData(lua_State* L, Map* map)
     {
 #ifdef TRINITY
         ElunaInstanceAI* iAI = NULL;
@@ -295,7 +295,7 @@ namespace LuaMap
 #endif
 
         if (iAI)
-            sEluna->PushInstanceData(L, iAI, false);
+            Eluna::GetEluna(L)->PushInstanceData(L, iAI, false);
         else
             Eluna::Push(L); // nil
 
@@ -305,7 +305,7 @@ namespace LuaMap
     /**
      * Saves the [Map]'s instance data to the database.
      */
-    int SaveInstanceData(Eluna* E, lua_State* L, Map* map)
+    int SaveInstanceData(lua_State* L, Map* map)
     {
 #ifdef TRINITY
         ElunaInstanceAI* iAI = NULL;

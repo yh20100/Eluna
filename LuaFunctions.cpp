@@ -1218,7 +1218,7 @@ ElunaRegister<Map> MapMethods[] =
     { ENV_BOTH, "IsRaid", &LuaMap::IsRaid },                            // :IsRaid() - Returns the true if the map is a raid map, else false UNDOCUMENTED
 
     // Other
-    { ENV_MAP,  "SaveInstanceData", &LuaMap::SaveInstanceData },
+    { ENV_BOTH, "SaveInstanceData", &LuaMap::SaveInstanceData },
 
     { ENV_NONE, nullptr, nullptr },
 };
