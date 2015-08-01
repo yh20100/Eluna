@@ -132,7 +132,7 @@ public:
     typedef ACE_Guard<LockType> Guard;
 #endif
 
-    static class InstanceHolder
+    class InstanceHolder
     {
     private:
         // typedef std::mutex LockType;
