@@ -2855,20 +2855,31 @@ namespace LuaGlobalFunctions
     /**
      * Sends a message to the state messaging system
      *
-     * Sent messages can be read by any Eluna state registered to listen to the channel
+     * Sent messages are passed to any states registered to listen to the channel - even sender.
      *
      * @param string channel : channel name to send the message to
-     * @param ... vararg : variable amount of nil, bool, string, number, uint64, acyclic table containing types in this list
+     * @param table table : table containing any non userdata values
      */
     int StateChannelSend(lua_State* L)
     {
         std::string channel = Eluna::CHECKVAL<std::string>(L, 1);
-        Eluna::msgque->Add(L, 2, lua_gettop(L), channel);
+        luaL_checktype(L, 2, LUA_TTABLE);
+        lua_pushcfunction(L, mar_encode);
+        lua_pushvalue(L, 2);
+
+        lua_call(L, 1, 1);
+
+        size_t len;
+        const char* c_str = luaL_checklstring(L, -1, &len);
+        std::string message(c_str, len);
+        lua_pop(L, 1);
+
+        Eluna::msgque.AddMsg(channel, message);
         return 0;
     }
 
     /**
-     * Registers to listen to a channel any lua state can send messages to
+     * Register to a channel where any state can send mesages to
      *
      * @param string channel : channel name to register to
      * @return bool registered : false if already registered to channel
@@ -2878,19 +2889,19 @@ namespace LuaGlobalFunctions
         std::string channel = Eluna::CHECKVAL<std::string>(L, 1);
         Eluna* E = Eluna::GetEluna(L);
 
-        if (E->stateChannels.find(channel) != E->stateChannels.end())
+        if (E->channels.find(channel) != E->channels.end())
         {
             Eluna::Push(L, false);
             return 1;
         }
 
-        E->stateChannels.insert(channel);
+        E->channels.insert(channel);
         Eluna::Push(L, true);
         return 1;
     }
 
     /**
-     * Unregisters from a state channel registered by RegisterStateChannel
+     * Unregisters from a channel registered to with StateChannelRegister
      *
      * @param string channel : channel name to unregister from
      * @return bool unregistered : false if already unregistered from channel
@@ -2900,13 +2911,13 @@ namespace LuaGlobalFunctions
         std::string channel = Eluna::CHECKVAL<std::string>(L, 1);
         Eluna* E = Eluna::GetEluna(L);
 
-        if (E->stateChannels.find(channel) == E->stateChannels.end())
+        if (E->channels.find(channel) == E->channels.end())
         {
             Eluna::Push(L, false);
             return 1;
         }
 
-        E->stateChannels.erase(channel);
+        E->channels.erase(channel);
         Eluna::Push(L, true);
         return 1;
     }

@@ -13,7 +13,6 @@
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
-#include "LuaVal.h"
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -38,11 +37,11 @@ Eluna::ScriptList Eluna::lua_extensions;
 std::string Eluna::lua_folderpath;
 std::string Eluna::lua_requirepath;
 Eluna::InstanceHolder Eluna::instances;
-Eluna* Eluna::GEluna = nullptr;
-MsgQueue* Eluna::msgque = nullptr;
-std::thread::id const Eluna::main_thread_id = std::this_thread::get_id();
-bool Eluna::reload = false;
-bool Eluna::initialized = false;
+Eluna* Eluna::GEluna(nullptr);
+MsgQueue Eluna::msgque;
+std::thread::id const Eluna::main_thread_id(std::this_thread::get_id());
+std::atomic<bool> Eluna::reload(false);
+std::atomic<bool> Eluna::initialized(false);
 Eluna::LockType Eluna::lock;
 
 extern void RegisterFunctions(Eluna* E);
@@ -59,13 +58,14 @@ Eluna* Eluna::GetGEluna(const char* info)
         {
             ELUNA_LOG_ERROR("[Eluna]: Race condition accessing GEluna. Report to devs with this message and details about what you were doing");
         }
+        Eluna::THREADSAFE();
     }
     return Eluna::GEluna;
 }
 
 void Eluna::Initialize()
 {
-    LOCK_ELUNA;
+    THREADSAFE();
     ASSERT(!IsInitialized());
 
 #ifdef TRINITY
@@ -80,10 +80,6 @@ void Eluna::Initialize()
     // This is checked on Eluna creation
     initialized = true;
 
-    // Create state messaging queue
-    // must be before opening ANY lua state
-    msgque = new MsgQueue();
-
     // Create global eluna
     GEluna = new Eluna(nullptr);
     GEluna->RunScripts();
@@ -91,19 +87,16 @@ void Eluna::Initialize()
 
 void Eluna::Uninitialize()
 {
-    LOCK_ELUNA;
+    THREADSAFE();
     ASSERT(IsInitialized());
 
     delete GEluna;
     GEluna = nullptr;
 
-    delete msgque;
-    msgque = nullptr;
+    initialized = false;
 
     lua_scripts.clear();
     lua_extensions.clear();
-
-    initialized = false;
 }
 
 void Eluna::LoadScriptPaths()
@@ -145,13 +138,11 @@ void Eluna::__ReloadEluna()
 
     // Run scripts from loaded paths
     RunScripts();
-
-    reload = false;
 }
 
 void Eluna::_ReloadEluna()
 {
-    LOCK_ELUNA;
+    Eluna::THREADSAFE();
     ASSERT(IsInitialized());
 
     eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
@@ -159,7 +150,7 @@ void Eluna::_ReloadEluna()
     // Reload script paths
     LoadScriptPaths();
 
-    for (auto& e : instances.GetMap())
+    for (auto& e : instances.GetInstances())
         e->__ReloadEluna();
 
     reload = false;
@@ -1329,8 +1320,6 @@ void Eluna::CreateInstanceData(Map const* map)
  */
 void Eluna::FreeInstanceId(uint32 instanceId)
 {
-    LOCK_ELUNA;
-
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
     {
         auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)i, instanceId);

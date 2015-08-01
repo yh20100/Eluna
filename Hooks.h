@@ -102,7 +102,7 @@ namespace Hooks
         // World
         WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
         WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
-        // UNUSED                               =     10,
+        WORLD_EVENT_ON_CHANNEL_MESSAGE          =     10,       // (event, channel, table)
         WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
         WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
         WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)

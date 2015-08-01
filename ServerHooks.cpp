@@ -11,6 +11,7 @@
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
+#include "lmarshal.h"
 
 using namespace Hooks;
 
@@ -245,11 +246,30 @@ void Eluna::OnShutdownCancel()
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
+    // Assumed thread safe
+    THREADSAFE();
+
+    if (ShouldReload())
     {
-        LOCK_ELUNA;
-        if (ShouldReload())
-            _ReloadEluna();
+        _ReloadEluna();
+        return;
     }
+
+    for (auto& state : instances.GetInstances())
+    {
+        for (auto& queue : msgque.que)
+        {
+            if (state->channels.find(queue.first) == state->channels.end())
+                continue;
+            for (auto& msg : queue.second)
+                state->channelMessages.push_back(std::make_pair(queue.first, msg));
+        }
+    }
+    msgque.que.clear();
+
+    for (auto& msg : channelMessages)
+        OnStateMessage(msg.first, msg.second);
+    channelMessages.clear();
 
     GetEventMgr()->UpdateGlobal(diff);
 
@@ -301,8 +321,41 @@ void Eluna::OnPlayerLeave(Map* map, Player* player)
     CallAllFunctions(ServerEventBindings, key);
 }
 
+void Eluna::OnStateMessage(std::string const&  channel, std::string const& message)
+{
+    START_HOOK(WORLD_EVENT_ON_CHANNEL_MESSAGE);
+
+    lua_pushcfunction(L, mar_decode);
+    lua_pushlstring(L, message.c_str(), message.length());
+
+    if (lua_pcall(L, 1, 1, 0) != 0)
+    {
+        ELUNA_LOG_ERROR("Error while parsing state message with lua-marshal: %s", lua_tostring(L, -1));
+        lua_pop(L, 1);
+        return;
+    }
+    if (!lua_istable(L, -1))
+    {
+        ELUNA_LOG_ERROR("Error while receiving state message: Expected data to be a table (type 5), got type %d instead", lua_type(L, -1));
+        lua_pop(L, 1);
+        return;
+    }
+
+    Push();
+    lua_pop(L, 1);
+
+    Push(channel);
+    lua_insert(L, -2);
+
+    CallAllFunctions(ServerEventBindings, key);
+}
+
 void Eluna::OnUpdate(Map* map, uint32 diff)
 {
+    for (auto& msg : channelMessages)
+        OnStateMessage(msg.first, msg.second);
+    channelMessages.clear();
+
     map->GetEluna()->GetEventMgr()->UpdateGlobal(diff);
 
     START_HOOK(MAP_EVENT_ON_UPDATE);

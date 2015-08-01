@@ -10,9 +10,13 @@
 #include "Common.h"
 #include "SharedDefines.h"
 #include "DBCEnums.h"
+#include <string>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <unordered_set>
+#include <unordered_map>
+#include <atomic>
 
 #include "Group.h"
 #include "Item.h"
@@ -99,7 +103,6 @@ struct lua_State;
 class Eluna;
 class EventMgr;
 class ElunaObject;
-class MsgQueue;
 template<typename T> class ElunaTemplate;
 
 template<typename K> class BindingMap;
@@ -118,7 +121,24 @@ struct LuaScript
 // defines for global variables used internally - do not edit these in the lua state!
 #define ELUNA_OBJECT_STORE  "Eluna Object Store"
 #define ELUNA_STATE_PTR     "Eluna State Ptr"
-#define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
+#define LOCK_ELUNA /*Eluna::Guard __guard(Eluna::GetLock())*/
+
+class MsgQueue
+{
+public:
+    typedef std::mutex LockType;
+    typedef std::lock_guard<LockType> WriteGuard;
+    typedef std::unordered_map < std::string, std::vector< std::string > > Queue;
+
+    void AddMsg(std::string const& channel, std::string const& message)
+    {
+        WriteGuard guard(_msglock);
+        que[channel].push_back(message);
+    }
+
+    Queue que;
+    LockType _msglock;
+};
 
 class Eluna
 {
@@ -140,22 +160,27 @@ public:
         // LockType _lock;
         std::unordered_set<Eluna*> objs;
     public:
-        std::unordered_set<Eluna*> const & GetMap() const { return objs; }
+
+        // not thread safe
+        std::unordered_set<Eluna*>& GetInstances()
+        {
+            return objs;
+        }
         void Add(Eluna* E)
         {
-            LOCK_ELUNA;
+            Eluna::THREADSAFE();
             objs.insert(E);
         }
         void Remove(Eluna* E)
         {
-            LOCK_ELUNA;
+            Eluna::THREADSAFE();
             objs.erase(E);
         }
     };
 
 private:
-    static bool reload;
-    static bool initialized;
+    static std::atomic<bool> reload;
+    static std::atomic<bool> initialized;
     static LockType lock;
 
     // Lua script locations
@@ -228,8 +253,10 @@ private:
     }
 
 public:
+    static void THREADSAFE() { ASSERT(main_thread_id == std::this_thread::get_id()); }
+
     static Eluna* GEluna;
-    static MsgQueue* msgque;
+    static MsgQueue msgque;
     static std::thread::id const main_thread_id;
     std::thread::id current_thread_id;
 
@@ -242,7 +269,9 @@ public:
         return eventMgr;
     }
     Map* const owner;
-    std::set<std::string> stateChannels;
+    // State messaging channels and messages
+    std::unordered_set<std::string> channels;
+    std::vector< std::pair<std::string, std::string> > channelMessages;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
@@ -267,9 +296,9 @@ public:
     static void Uninitialize();
     // This function is used to make eluna reload
     static LockType& GetLock() { return lock; };
-    static void ReloadEluna() { LOCK_ELUNA; reload = true; }
-    static bool ShouldReload() { LOCK_ELUNA; return reload; }
-    static bool IsInitialized() { LOCK_ELUNA; return initialized; }
+    static void ReloadEluna() { reload = true; }
+    static bool ShouldReload() { return reload; }
+    static bool IsInitialized() { return initialized; }
 
     // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)
@@ -548,6 +577,9 @@ public:
     void OnUpdate(uint32 diff);
     void OnStartup();
     void OnShutdown();
+
+    // stack top expected to be message table
+    void OnStateMessage(std::string const&  channel, std::string const& message);
 
     /* Battle Ground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);

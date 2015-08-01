@@ -15,7 +15,7 @@ extern "C"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
-#include "LuaVal.h"
+#include "lmarshal.h"
 
 // Method includes
 #include "GlobalMethods.h"
