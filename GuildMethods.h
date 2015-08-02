@@ -37,10 +37,8 @@ namespace LuaGuild
                 {
                     if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
                     {
-                        ++i;
-                        Eluna::Push(L, i);
                         Eluna::Push(L, player);
-                        lua_settable(L, tbl);
+                        lua_rawseti(L, tbl, ++i);
                     }
                 }
             }

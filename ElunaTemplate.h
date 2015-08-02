@@ -80,10 +80,10 @@ public:
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, thunk, 1);
-            lua_settable(E->L, -3);
+            lua_rawset(E->L, -3);
         }
 
-        lua_remove(E->L, -1);
+        lua_pop(E->L, 1);
     }
 };
 
@@ -162,30 +162,22 @@ public:
         ASSERT(name);
 
         // check that metatable isn't already there
-        luaL_getmetatable(E->L, name);
-        ASSERT(lua_isnoneornil(E->L, -1));
-
-        // check that metatable isn't already there
         lua_getglobal(E->L, name);
         ASSERT(lua_isnoneornil(E->L, -1));
 
-        // pop metatable and methodtable values
-        lua_pop(E->L, 2);
+        // pop nil
+        lua_pop(E->L, 1);
 
         tname = name;
         manageMemory = gc;
 
-        // create methodtable for userdata of this type
+        // create metatable for userdata of this type
         lua_newtable(E->L);
-        int methods = lua_gettop(E->L);
-
-        // push methodtable to stack to be accessed and modified by users
-        lua_pushvalue(E->L, methods);
-        lua_setglobal(E->L, tname);
-
-        // create metatable for userdatas of this type
-        ASSERT(luaL_newmetatable(E->L, tname));
         int metatable = lua_gettop(E->L);
+
+        // push metatable to stack to be accessed and modified by users
+        lua_pushvalue(E->L, metatable);
+        lua_setglobal(E->L, tname);
 
         // tostring
         lua_pushcfunction(E->L, ToString);
@@ -200,12 +192,8 @@ public:
         lua_setfield(E->L, metatable, "__gc");
 
         // make methods accessible through metatable
-        lua_pushvalue(E->L, methods);
+        lua_pushvalue(E->L, metatable);
         lua_setfield(E->L, metatable, "__index");
-
-        // make new indexes saved to methods
-        lua_pushvalue(E->L, methods);
-        lua_setfield(E->L, metatable, "__newindex");
 
         // enable comparing values
         lua_pushcfunction(E->L, Equal);
@@ -213,14 +201,14 @@ public:
 
         // special method to get the object type
         lua_pushcfunction(E->L, GetType);
-        lua_setfield(E->L, methods, "GetObjectType");
+        lua_setfield(E->L, metatable, "GetObjectType");
 
         // special method to decide object invalidation at end of call
         lua_pushcfunction(E->L, SetInvalidation);
-        lua_setfield(E->L, methods, "SetInvalidation");
+        lua_setfield(E->L, metatable, "SetInvalidation");
 
-        // pop methods and metatable
-        lua_pop(E->L, 2);
+        // pop metatable
+        lua_pop(E->L, 1);
     }
 
     template<typename C>
@@ -231,12 +219,7 @@ public:
         ASSERT(methodTable);
 
         // get metatable
-        luaL_getmetatable(E->L, tname);
-        ASSERT(lua_istable(E->L, -1));
-
-        // get method table
-        lua_getfield(E->L, -1, "__index");
-        lua_remove(E->L, -2);
+        lua_getglobal(E->L, tname);
         ASSERT(lua_istable(E->L, -1));
 
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
@@ -257,10 +240,10 @@ public:
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, CallMethod, 1);
-            lua_settable(E->L, -3);
+            lua_rawset(E->L, -3);
         }
 
-        lua_remove(E->L, -1);
+        lua_pop(E->L, 1);
     }
 
     static int Push(lua_State* L, T const* obj)
@@ -276,7 +259,7 @@ public:
         lua_getglobal(L, ELUNA_OBJECT_STORE);
         ASSERT(lua_istable(L, -1));
         lua_pushlightuserdata(L, obj_voidptr);
-        lua_gettable(L, -2);
+        lua_rawget(L, -2);
         if (ElunaObject* elunaObj = Eluna::CHECKTYPE(L, -1, tname, false))
         {
             // set userdata valid
@@ -286,7 +269,7 @@ public:
             lua_remove(L, -2);
             return 1;
         }
-        lua_remove(L, -1);
+        lua_pop(L, 1);
         // left userdata_table in stack
 
         // Create new userdata
@@ -301,7 +284,7 @@ public:
         *ptrHold = new ElunaObject(obj_voidptr, manageMemory);
 
         // Set metatable for it
-        luaL_getmetatable(L, tname);
+        lua_getglobal(L, tname);
         if (!lua_istable(L, -1))
         {
             ELUNA_LOG_ERROR("%s missing metatable", tname);
@@ -313,7 +296,7 @@ public:
 
         lua_pushlightuserdata(L, obj_voidptr);
         lua_pushvalue(L, -2);
-        lua_settable(L, -4);
+        lua_rawset(L, -4);
         lua_remove(L, -2);
         return 1;
     }

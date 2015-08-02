@@ -179,10 +179,8 @@ namespace LuaGlobalFunctions
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #endif
                     {
-                        ++i;
-                        Eluna::Push(L, i);
                         Eluna::Push(L, player);
-                        lua_settable(L, tbl);
+                        lua_rawseti(L, tbl, ++i);
                     }
                 }
             }
@@ -2846,7 +2844,7 @@ namespace LuaGlobalFunctions
     int NewUint64(lua_State* L)
     {
         if (lua_isstring(L, 1))
-            Eluna::Push(L, strtoull(Eluna::CHECKVAL<const char*>(L, 1), NULL, 0));
+            Eluna::Push(L, uint64(strtoull(Eluna::CHECKVAL<const char*>(L, 1), NULL, 0)));
         else
             Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1, 0));
         return 1;

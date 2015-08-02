@@ -116,6 +116,8 @@ void EventMgr::UpdateGlobal(uint32 diff)
 
 void EventMgr::AddEvent(ObjectGuid const& guid, int funcRef, uint32 delay, uint32 repeats)
 {
+    lua_rawgeti(owner->L, LUA_REGISTRYINDEX, funcRef);
+    ASSERT(lua_isfunction(owner->L, -1));
     processorMap[guid].AddEvent(funcRef, delay, repeats);
 }
 

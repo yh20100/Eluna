@@ -252,15 +252,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Player*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -290,15 +289,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Creature*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -328,15 +326,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<GameObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -409,15 +406,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<WorldObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -754,7 +750,7 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            ElunaDo(obj)->GetEventMgr()->AddEvent(obj->GET_GUID(), functionRef, delay, repeats);
+            Eluna::GetEluna(L)->GetEventMgr()->AddEvent(obj->GET_GUID(), functionRef, delay, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;
@@ -768,7 +764,7 @@ namespace LuaWorldObject
     int RemoveEventById(lua_State* L, WorldObject* obj)
     {
         int eventId = Eluna::CHECKVAL<int>(L, 2);
-        ElunaDo(obj)->GetEventMgr()->Delete(obj->GET_GUID(), eventId);
+        Eluna::GetEluna(L)->GetEventMgr()->Delete(obj->GET_GUID(), eventId);
         return 0;
     }
 
@@ -776,9 +772,9 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(lua_State* /*L*/, WorldObject* obj)
+    int RemoveEvents(lua_State* L, WorldObject* obj)
     {
-        ElunaDo(obj)->GetEventMgr()->Delete(obj->GET_GUID());
+        Eluna::GetEluna(L)->GetEventMgr()->Delete(obj->GET_GUID());
         return 0;
     }
 

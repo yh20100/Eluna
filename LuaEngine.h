@@ -119,8 +119,8 @@ struct LuaScript
 };
 
 // defines for global variables used internally - do not edit these in the lua state!
-#define ELUNA_OBJECT_STORE  "Eluna Object Store"
-#define ELUNA_STATE_PTR     "Eluna State Ptr"
+#define ELUNA_OBJECT_STORE  "_Eluna Object Store"
+#define ELUNA_STATE_PTR     "_Eluna State Ptr"
 #define LOCK_ELUNA /*Eluna::Guard __guard(Eluna::GetLock())*/
 
 class MsgQueue

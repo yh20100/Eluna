@@ -227,7 +227,7 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
             buf_done(L, &rec_buf);
             lua_pop(L, 1);
 
-            lua_newtable(L);
+            lua_createtable(L, ar.nups, 0);
             for (i = 1; i <= ar.nups; i++) {
                 const char* upvalue_name = lua_getupvalue(L, -2, i);
                 if (strcmp("_ENV", upvalue_name) == 0) {
@@ -471,7 +471,7 @@ static int mar_decode_table(lua_State *L, const char* buf, size_t len, size_t *i
     while (p - buf < (ptrdiff_t)len) {
         mar_decode_value(L, buf, len, &p, idx);
         mar_decode_value(L, buf, len, &p, idx);
-        lua_settable(L, -3);
+        lua_rawset(L, -3);
     }
     return 1;
 }

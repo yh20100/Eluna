@@ -338,11 +338,11 @@ namespace LuaMap
     {
         uint32 team = Eluna::CHECKVAL<uint32>(L, 2, TEAM_NEUTRAL);
 
-        lua_newtable(L);
+        Map::PlayerList const& players = map->GetPlayers();
+        lua_createtable(L, team >= TEAM_NEUTRAL ? players.getSize() : players.getSize() / 3, 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-        Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
 #ifndef TRINITY
@@ -354,9 +354,8 @@ namespace LuaMap
                 continue;
             if (team >= TEAM_NEUTRAL || player->GetTeamId() == team)
             {
-                Eluna::Push(L, ++i);
                 Eluna::Push(L, player);
-                lua_settable(L, tbl);
+                lua_rawseti(L, tbl, ++i);
             }
         }
 

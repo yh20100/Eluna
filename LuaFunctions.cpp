@@ -230,9 +230,9 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { ENV_BOTH, "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
     { ENV_BOTH, "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
     { ENV_BOTH, "SendPacket", &LuaWorldObject::SendPacket },                        // :SendPacket(packet) - Sends a specified packet to everyone around
-    { ENV_BOTH, "RegisterEvent", &LuaWorldObject::RegisterEvent },
-    { ENV_BOTH, "RemoveEventById", &LuaWorldObject::RemoveEventById },
-    { ENV_BOTH, "RemoveEvents", &LuaWorldObject::RemoveEvents },
+    { ENV_MAP, "RegisterEvent", &LuaWorldObject::RegisterEvent },
+    { ENV_MAP, "RemoveEventById", &LuaWorldObject::RemoveEventById },
+    { ENV_MAP, "RemoveEvents", &LuaWorldObject::RemoveEvents },
 
     { ENV_NONE, nullptr, nullptr },
 };

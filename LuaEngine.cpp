@@ -930,7 +930,7 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
     {
         if (lua_getmetatable(luastate, narg))
         {
-            luaL_getmetatable(luastate, tname);
+            lua_getglobal(luastate, tname);
             if (lua_rawequal(luastate, -1, -2) == 1)
             {
                 valid = true;
