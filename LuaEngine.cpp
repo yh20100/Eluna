@@ -160,11 +160,11 @@ Eluna::Eluna(Map* map) :
 event_level(0),
 push_counter(0),
 enabled(false),
-owner(map),
 
-L(nullptr),
-eventMgr(nullptr),
 current_thread_id(std::this_thread::get_id()),
+eventMgr(nullptr),
+owner(map),
+L(nullptr),
 
 ServerEventBindings(nullptr),
 PlayerEventBindings(nullptr),

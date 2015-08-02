@@ -259,16 +259,9 @@ public:
     static MsgQueue msgque;
     static std::thread::id const main_thread_id;
     std::thread::id current_thread_id;
-
-    static Eluna* GetGEluna(const char* info);
-
-    lua_State* L;
     EventMgr* eventMgr;
-    EventMgr* GetEventMgr() const
-    {
-        return eventMgr;
-    }
     Map* const owner;
+    lua_State* L;
     // State messaging channels and messages
     std::unordered_set<std::string> channels;
     std::vector< std::pair<std::string, std::string> > channelMessages;
@@ -299,6 +292,7 @@ public:
     static void ReloadEluna() { reload = true; }
     static bool ShouldReload() { return reload; }
     static bool IsInitialized() { return initialized; }
+    static Eluna* GetGEluna(const char* info);
 
     // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)
@@ -339,6 +333,11 @@ public:
 
     Eluna(Map* map);
     ~Eluna();
+
+    EventMgr* GetEventMgr() const
+    {
+        return eventMgr;
+    }
 
     /*
      * Returns `true` if Eluna has instance data for `map`.
