@@ -1279,6 +1279,12 @@ ElunaRegister<uint64> uint64Methods[] =
     { ENV_BOTH, "__lt", &Luauint64::__lt },
     { ENV_BOTH, "__le", &Luauint64::__le },
     { ENV_BOTH, "__tostring", &Luauint64::__tostring },
+    { ENV_BOTH, "__gc", &Luauint64::gc },
+
+    { ENV_BOTH, "fitsint", &Luauint64::fitsint },
+    { ENV_BOTH, "toint", &Luauint64::toint },
+    { ENV_BOTH, "tonumber", &Luauint64::tonumber },
+    { ENV_BOTH, "tohex", &Luauint64::tohex },
 
     { ENV_NONE, nullptr, nullptr }
 };

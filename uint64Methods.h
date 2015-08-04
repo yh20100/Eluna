@@ -66,5 +66,59 @@ namespace Luauint64
         Eluna::Push(L, std::to_string(*u));
         return 1;
     }
+    int gc(lua_State* L, uint64* u)
+    {
+        Eluna::GetEluna(L)->storeduints.erase(*u);
+        return ElunaTemplate<uint64>::CollectGarbage(L);
+    }
+
+    /**
+     * Returns true if the value can be safely casted to a lua integer
+     *
+     * @return bool fits
+     */
+    int fitsint(lua_State* L, uint64* u)
+    {
+        if (*u <= static_cast<uint64>(std::numeric_limits<lua_Integer>::max()))
+            Eluna::Push(L, true);
+        else
+            Eluna::Push(L, false);
+        return 1;
+    }
+
+    /**
+     * Casts the uint64 number into a lua integer and returns it
+     *
+     * @return int64 value
+     */
+    int toint(lua_State* L, uint64* u)
+    {
+        Eluna::Push(L, static_cast<lua_Integer>(*u));
+        return 1;
+    }
+
+    /**
+     * Casts the uint64 number into a lua number and returns it
+     *
+     * @return double value
+     */
+    int tonumber(lua_State* L, uint64* u)
+    {
+        Eluna::Push(L, static_cast<lua_Number>(*u));
+        return 1;
+    }
+
+    /**
+     * Returns the uint64 as a hex string
+     *
+     * @return int64 value
+     */
+    int tohex(lua_State* L, uint64* u)
+    {
+        std::ostringstream oss;
+        oss << std::hex << *u;
+        Eluna::Push(L, oss.str().c_str());
+        return 1;
+    }
 };
 #endif

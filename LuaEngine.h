@@ -265,6 +265,8 @@ public:
     // State messaging channels and messages
     std::unordered_set<std::string> channels;
     std::vector< std::pair<std::string, std::string> > channelMessages;
+    // uint64 store
+    std::unordered_map< uint64, uint64* > storeduints;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;

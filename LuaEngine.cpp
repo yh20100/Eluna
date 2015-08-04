@@ -658,7 +658,18 @@ void Eluna::Push(lua_State* luastate)
 }
 void Eluna::Push(lua_State* luastate, const uint64 l)
 {
-    ElunaTemplate<uint64>::Push(luastate, new uint64(l));
+    Eluna* E = Eluna::GetEluna(luastate);
+    auto it = E->storeduints.find(l);
+    if (it == E->storeduints.end())
+    {
+        uint64* ptr = new uint64(l);
+        E->storeduints[*ptr] = ptr;
+        ElunaTemplate<uint64>::Push(luastate, ptr);
+    }
+    else
+    {
+        ElunaTemplate<uint64>::Push(luastate, it->second);
+    }
 }
 void Eluna::Push(lua_State* luastate, const int8 i)
 {
@@ -931,12 +942,13 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
         if (lua_getmetatable(luastate, narg))
         {
             lua_getglobal(luastate, tname);
-            if (lua_rawequal(luastate, -1, -2) == 1)
+            bool equal = lua_rawequal(luastate, -1, -2) == 1;
+            lua_pop(luastate, 2);
+            if (equal)
             {
                 valid = true;
                 ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
             }
-            lua_pop(luastate, 2);
         }
     }
 
