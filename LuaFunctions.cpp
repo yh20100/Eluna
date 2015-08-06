@@ -39,7 +39,7 @@ extern "C"
 #include "BattleGroundMethods.h"
 #include "uint64Methods.h"
 
-ElunaGlobal::ElunaRegister GlobalMethods[] =
+ElunaFunction::ElunaRegister GlobalMethods[] =
 {
     // Hooks
     { ENV_BOTH, "RegisterServerEvent", &LuaGlobalFunctions::RegisterServerEvent },                       // RegisterServerEvent(event, function)
@@ -1267,7 +1267,7 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
     { ENV_NONE, nullptr, nullptr }
 };
 
-ElunaRegister<uint64> uint64Methods[] =
+ElunaFunction::ElunaRegister uint64Methods[] =
 {
     { ENV_BOTH, "__add", &Luauint64::__add },
     { ENV_BOTH, "__sub", &Luauint64::__sub },
@@ -1307,7 +1307,7 @@ template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
 
 void RegisterFunctions(Eluna* E)
 {
-    ElunaGlobal::SetMethods(E, GlobalMethods);
+    ElunaFunction::SetMethods(E, GlobalMethods);
 
     ElunaTemplate<Object>::Register(E, "Object");
     ElunaTemplate<Object>::SetMethods(E, ObjectMethods);

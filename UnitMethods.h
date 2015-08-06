@@ -1801,6 +1801,18 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Makes the unit walk if enable is true and otherwise run.
+     *
+     * @param bool enable = true
+     */
+    int SetWalk(lua_State* L, Unit* unit)
+    {
+        bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
+        unit->SetWalk(enable);
+        return 0;
+    }
+
     /*int SetCanFly(lua_State* L, Unit* unit)
     {
     bool apply = Eluna::CHECKVAL<bool>(L, 2, true);

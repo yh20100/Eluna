@@ -538,7 +538,7 @@ void Eluna::RunScripts()
     }
     // Stack: package, modules
     lua_pop(L, 2);
-    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
+    ELUNA_LOG_DEBUG("[Eluna]: Executed %u Lua scripts in %u ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
 
     OnLuaStateOpen();
 }
@@ -804,17 +804,17 @@ static T CheckIntegerRange(lua_State* luastate, int narg)
     {
         uint64 value = *Eluna::CHECKOBJ<uint64>(luastate, narg);
 
-        if (std::numeric_limits<T>::max() > 0 && value > static_cast<uint64>(std::numeric_limits<T>::max()))
+        if (std::numeric_limits<T>::max() < 0 || value > static_cast<uint64>(std::numeric_limits<T>::max()))
         {
             std::ostringstream ss;
-            ss << "value must be less than or equal to " << std::numeric_limits<T>::max();
+            ss << "value must be less than or equal to " << static_cast<uint64>(std::numeric_limits<T>::max());
             return luaL_argerror(luastate, narg, ss.str().c_str());
         }
 
-        if (std::numeric_limits<T>::min() < 0 || value < static_cast<uint64>(std::numeric_limits<T>::min()))
+        if (std::numeric_limits<T>::min() >= 0 && value < static_cast<uint64>(std::numeric_limits<T>::min()))
         {
             std::ostringstream ss;
-            ss << "value must be greater than or equal to " << std::numeric_limits<T>::min();
+            ss << "value must be greater than or equal to " << static_cast<uint64>(std::numeric_limits<T>::min());
             return luaL_argerror(luastate, narg, ss.str().c_str());
         }
 
@@ -823,7 +823,8 @@ static T CheckIntegerRange(lua_State* luastate, int narg)
 
     lua_Integer value = luaL_checkinteger(luastate, narg);
 
-    if (std::numeric_limits<T>::max() > 0 && value > static_cast<lua_Integer>(std::numeric_limits<T>::max()))
+    if ((std::numeric_limits<T>::max() >= 0 && static_cast<uint64>(value) > static_cast<uint64>(std::numeric_limits<T>::max())) ||
+        (std::numeric_limits<T>::max() < 0 && static_cast<int64>(value) > static_cast<int64>(std::numeric_limits<T>::max())))
     {
         std::ostringstream ss;
         ss << "value must be less than or equal to " << std::numeric_limits<T>::max();

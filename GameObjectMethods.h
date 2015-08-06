@@ -243,9 +243,22 @@ namespace LuaGameObject
     int RemoveFromWorld(lua_State* L, GameObject* go)
     {
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
+
+        // cs_gobject.cpp copy paste
+        ObjectGuid ownerGuid = go->GetOwnerGUID();
+        if (ownerGuid)
+        {
+            Unit* owner = ObjectAccessor::GetUnit(*go, ownerGuid);
+            if (!owner || !ownerGuid.IsPlayer())
+                return 0;
+
+            owner->RemoveGameObject(go, false);
+        }
+
+        go->SetRespawnTime(0);
+        go->Delete();
         if (deldb)
             go->DeleteFromDB();
-        go->RemoveFromWorld();
         return 0;
     }
 
@@ -264,33 +277,19 @@ namespace LuaGameObject
 
     /**
      * Despawns a [GameObject]
-     *
-     * @param uint32 delay : time in seconds to despawn
      */
     int Despawn(lua_State* L, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
-        if (!delay)
-            delay = 1;
-
-        go->SetSpawnedByDefault(false);
-        go->SetRespawnTime(delay);
+        go->SetLootState(GO_JUST_DEACTIVATED);
         return 0;
     }
 
     /**
      * Respawns a [GameObject]
-     *
-     * @param uint32 delay : time of respawn in seconds
      */
     int Respawn(lua_State* L, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
-        if (!delay)
-            delay = 1;
-
-        go->SetSpawnedByDefault(true);
-        go->SetRespawnTime(delay);
+        go->Respawn();
         return 0;
     }
 };

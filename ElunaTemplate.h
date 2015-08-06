@@ -26,7 +26,7 @@ enum ElunaEnvironments
     ENV_MAX
 };
 
-class ElunaGlobal
+class ElunaFunction
 {
 public:
     struct ElunaRegister
@@ -240,6 +240,40 @@ public:
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, CallMethod, 1);
+            lua_rawset(E->L, -3);
+        }
+
+        lua_pop(E->L, 1);
+    }
+
+    static void SetMethods(Eluna* E, ElunaFunction::ElunaRegister* methodTable)
+    {
+        ASSERT(E);
+        ASSERT(tname);
+        ASSERT(methodTable);
+
+        // get metatable
+        lua_getglobal(E->L, tname);
+        ASSERT(lua_istable(E->L, -1));
+
+        for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
+        {
+            if (methodTable->env >= ENV_MAX || methodTable->env < ENV_NONE)
+            {
+                ASSERT(false);
+            }
+            else if (methodTable->env == ENV_NONE)
+                continue;
+            else if (methodTable->env != ENV_BOTH)
+            {
+                if (!E->owner && methodTable->env == ENV_MAP)
+                    continue;
+                else if (E->owner && methodTable->env == ENV_WORLD)
+                    continue;
+            }
+            lua_pushstring(E->L, methodTable->name);
+            lua_pushlightuserdata(E->L, (void*)methodTable);
+            lua_pushcclosure(E->L, ElunaFunction::thunk, 1);
             lua_rawset(E->L, -3);
         }
 

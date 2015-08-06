@@ -155,25 +155,26 @@ public:
     class InstanceHolder
     {
     private:
-        // typedef std::mutex LockType;
-        // typedef std::lock_guard<LockType> WriteGuard;
-        // LockType _lock;
+        typedef std::mutex LockType;
+        typedef std::lock_guard<LockType> WriteGuard;
+        LockType _lock;
         std::unordered_set<Eluna*> objs;
     public:
 
-        // not thread safe
         std::unordered_set<Eluna*>& GetInstances()
         {
+            Eluna::THREADSAFE();
             return objs;
         }
+
         void Add(Eluna* E)
         {
-            Eluna::THREADSAFE();
+            WriteGuard guard(_lock);
             objs.insert(E);
         }
         void Remove(Eluna* E)
         {
-            Eluna::THREADSAFE();
+            WriteGuard guard(_lock);
             objs.erase(E);
         }
     };

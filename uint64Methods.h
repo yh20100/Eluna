@@ -16,59 +16,192 @@
 namespace Luauint64
 {
     // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
-    int __add(lua_State* L, uint64* u)
+    int __add(lua_State* L)
     {
-        Eluna::Push(L, (*u) + Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) + Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) + luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) + Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __sub(lua_State* L, uint64* u)
+    int __sub(lua_State* L)
     {
-        Eluna::Push(L, (*u) - Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) - Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) - luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) - Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __mul(lua_State* L, uint64* u)
+    int __mul(lua_State* L)
     {
-        Eluna::Push(L, (*u) * Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) * Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) * luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) * Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __div(lua_State* L, uint64* u)
+    int __div(lua_State* L)
     {
-        Eluna::Push(L, (*u) / Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (lua_isuserdata(L, 1) != 0)
+            Eluna::Push(L, static_cast<lua_Integer>(Eluna::CHECKVAL<uint64>(L, 1)));
+        else
+            lua_pushvalue(L, 1);
+        if (lua_isuserdata(L, 2) != 0)
+            Eluna::Push(L, static_cast<lua_Integer>(Eluna::CHECKVAL<uint64>(L, 2)));
+        else
+            lua_pushvalue(L, 2);
+        lua_arith(L, LUA_OPDIV);
         return 1;
     }
-    int __mod(lua_State* L, uint64* u)
+    int __idiv(lua_State* L)
     {
-        Eluna::Push(L, (*u) % Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) / Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) / luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) / Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __pow(lua_State* L, uint64* u)
+    int __mod(lua_State* L)
     {
-        Eluna::Push(L, static_cast<uint64>(powl(static_cast<long double>(*u), static_cast<long double>(Eluna::CHECKVAL<uint64>(L, 2)))));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) % Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) % luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) % Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __eq(lua_State* L, uint64* u)
+    int __pow(lua_State* L)
     {
-        Eluna::Push(L, (*u) == Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (lua_isuserdata(L, 1) != 0)
+            Eluna::Push(L, static_cast<lua_Integer>(Eluna::CHECKVAL<uint64>(L, 1)));
+        else
+            lua_pushvalue(L, 1);
+        if (lua_isuserdata(L, 2) != 0)
+            Eluna::Push(L, static_cast<lua_Integer>(Eluna::CHECKVAL<uint64>(L, 2)));
+        else
+            lua_pushvalue(L, 2);
+        lua_arith(L, LUA_OPPOW);
         return 1;
     }
-    int __lt(lua_State* L, uint64* u)
+    int __eq(lua_State* L)
     {
-        Eluna::Push(L, (*u) < Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) == Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) == luaL_checkinteger(L, 2));
+        }
+        else if (r)
+        {
+            Eluna::Push(L, luaL_checkinteger(L, 1) == Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __le(lua_State* L, uint64* u)
+    int __lt(lua_State* L)
     {
-        Eluna::Push(L, (*u) <= Eluna::CHECKVAL<uint64>(L, 2));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) < Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            lua_Integer i = luaL_checkinteger(L, 2);
+            Eluna::Push(L, i >= 0 && Eluna::CHECKVAL<uint64>(L, 1) < static_cast<uint64>(i));
+        }
+        else if (r)
+        {
+            lua_Integer i = luaL_checkinteger(L, 1);
+            Eluna::Push(L, i < 0 || static_cast<uint64>(i) < Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int __tostring(lua_State* L, uint64* u)
+    int __le(lua_State* L)
     {
-        Eluna::Push(L, std::to_string(*u));
+        bool l = lua_isuserdata(L, 1) != 0;
+        bool r = lua_isuserdata(L, 2) != 0;
+        if (l && r)
+        {
+            Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) <= Eluna::CHECKVAL<uint64>(L, 2));
+        }
+        else if (l)
+        {
+            lua_Integer i = luaL_checkinteger(L, 2);
+            Eluna::Push(L, i >= 0 && Eluna::CHECKVAL<uint64>(L, 1) <= static_cast<uint64>(i));
+        }
+        else if (r)
+        {
+            lua_Integer i = luaL_checkinteger(L, 1);
+            Eluna::Push(L, i < 0 || static_cast<uint64>(i) <= Eluna::CHECKVAL<uint64>(L, 2));
+        }
         return 1;
     }
-    int gc(lua_State* L, uint64* u)
+    int __tostring(lua_State* L)
     {
-        Eluna::GetEluna(L)->storeduints.erase(*u);
+        Eluna::Push(L, std::to_string(Eluna::CHECKVAL<uint64>(L, 1)));
+        return 1;
+    }
+    int gc(lua_State* L)
+    {
+        Eluna::GetEluna(L)->storeduints.erase(Eluna::CHECKVAL<uint64>(L, 1));
         return ElunaTemplate<uint64>::CollectGarbage(L);
     }
 
@@ -77,9 +210,12 @@ namespace Luauint64
      *
      * @return bool fits
      */
-    int fitsint(lua_State* L, uint64* u)
+    int fitsint(lua_State* L)
     {
-        if (*u <= static_cast<uint64>(std::numeric_limits<lua_Integer>::max()))
+        lua_Number imin = std::numeric_limits<lua_Integer>::min();
+        lua_Number imax = std::numeric_limits<lua_Integer>::max();
+        uint64 val = Eluna::CHECKVAL<uint64>(L, 1);
+        if ((imin < 0 || static_cast<uint64>(imin) < val) && (imax >= 0 && val <= static_cast<uint64>(imax)))
             Eluna::Push(L, true);
         else
             Eluna::Push(L, false);
@@ -91,9 +227,9 @@ namespace Luauint64
      *
      * @return int64 value
      */
-    int toint(lua_State* L, uint64* u)
+    int toint(lua_State* L)
     {
-        Eluna::Push(L, static_cast<lua_Integer>(*u));
+        Eluna::Push(L, static_cast<int64>(Eluna::CHECKVAL<uint64>(L, 1)));
         return 1;
     }
 
@@ -102,21 +238,21 @@ namespace Luauint64
      *
      * @return double value
      */
-    int tonumber(lua_State* L, uint64* u)
+    int tonumber(lua_State* L)
     {
-        Eluna::Push(L, static_cast<lua_Number>(*u));
+        Eluna::Push(L, static_cast<lua_Number>(Eluna::CHECKVAL<uint64>(L, 1)));
         return 1;
     }
 
     /**
      * Returns the uint64 as a hex string
      *
-     * @return int64 value
+     * @return string hexstr
      */
-    int tohex(lua_State* L, uint64* u)
+    int tohex(lua_State* L)
     {
         std::ostringstream oss;
-        oss << std::hex << *u;
+        oss << std::hex << Eluna::CHECKVAL<uint64>(L, 1);
         Eluna::Push(L, oss.str().c_str());
         return 1;
     }
