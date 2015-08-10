@@ -238,6 +238,8 @@ namespace LuaGameObject
     /**
      * Removes [GameObject] from the world
      *
+     * The object is no longer reachable after this and it is not respawned.
+     *
      * @param bool deleteFromDB : if true, it will delete the [GameObject] from the database
      */
     int RemoveFromWorld(lua_State* L, GameObject* go)
@@ -257,15 +259,18 @@ namespace LuaGameObject
 
         go->SetRespawnTime(0);
         go->Delete();
+
         if (deldb)
             go->DeleteFromDB();
+
+        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
         return 0;
     }
 
     /**
-     * Changes uses a door or a button type [GameObject]
+     * Activates a door or a button/lever
      *
-     * @param uint32 delay : cooldown time in seconds to restore the [GameObject] back to normal
+     * @param uint32 delay = 0 : cooldown time in seconds to restore the [GameObject] back to normal. 0 for infinite duration
      */
     int UseDoorOrButton(lua_State* L, GameObject* go)
     {
@@ -277,6 +282,8 @@ namespace LuaGameObject
 
     /**
      * Despawns a [GameObject]
+     *
+     * The gameobject may be automatically respawned by the core
      */
     int Despawn(lua_State* L, GameObject* go)
     {
@@ -290,6 +297,21 @@ namespace LuaGameObject
     int Respawn(lua_State* L, GameObject* go)
     {
         go->Respawn();
+        return 0;
+    }
+
+    /**
+     * Sets the respawn or despawn time for the gameobject.
+     *
+     * Respawn time is also used as despawn time depending on gameobject settings
+     *
+     * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
+     */
+    int SetRespawnTime(lua_State* L, GameObject* go)
+    {
+        int32 respawn = Eluna::CHECKVAL<int32>(L, 2);
+
+        go->SetRespawnTime(respawn);
         return 0;
     }
 };

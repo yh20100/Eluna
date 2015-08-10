@@ -341,7 +341,7 @@ public:
 
         ElunaObject* elunaObj = Eluna::CHECKTYPE(L, narg, tname, error);
         if (!elunaObj)
-            return nullptr;
+            return NULL;
 
         if (!elunaObj->IsValid())
         {

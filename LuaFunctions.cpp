@@ -367,6 +367,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { ENV_BOTH, "IsRooted", &LuaUnit::IsRooted },                               // :IsRooted()
     { ENV_BOTH, "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { ENV_BOTH, "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
+    { ENV_BOTH, "IsCasting", &LuaUnit::IsCasting },
     { ENV_BOTH, "IsStandState", &LuaUnit::IsStandState },                       // :IsStandState() - Returns true if the unit is standing
 #ifndef CLASSIC
     { ENV_BOTH, "IsOnVehicle", &LuaUnit::IsOnVehicle },                         // :IsOnVehicle() - Checks if the unit is on a vehicle
@@ -868,6 +869,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     // Setters
     { ENV_BOTH, "SetGoState", &LuaGameObject::SetGoState },
     { ENV_BOTH, "SetLootState", &LuaGameObject::SetLootState },
+    { ENV_BOTH, "SetRespawnTime", &LuaGameObject::SetRespawnTime },
 
     // Boolean
     { ENV_BOTH, "IsTransport", &LuaGameObject::IsTransport },
