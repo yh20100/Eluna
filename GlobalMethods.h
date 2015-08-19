@@ -2828,7 +2828,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an [uint64] object representing an `uint64` value.
+     * Returns a value that represents an uint64 number
      *
      * The value by default is 0, but can be initialized to something else by passing a number or uint64 as a string.
      *
@@ -2841,12 +2841,41 @@ namespace LuaGlobalFunctions
      * @param string str : uint64 number in a string, can be hex
      * @return uint64 value
      */
-    int NewUint64(lua_State* L)
+    int UintNew(lua_State* L)
     {
         if (lua_isstring(L, 1))
             Eluna::Push(L, uint64(strtoull(Eluna::CHECKVAL<const char*>(L, 1), NULL, 0)));
         else
             Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1, 0));
+        return 1;
+    }
+
+    /**
+     * Converts an unsigned integer into a string
+     *
+     * @param uint64 value : can be a negative value which is then casted to unsigned
+     * @return string numberstring
+     */
+    int UintToString(lua_State* L)
+    {
+        uint64 val = Eluna::CHECKVAL<uint64>(L, 1, 0);
+        Eluna::Push(L, std::to_string(val));
+        return 1;
+    }
+
+    /**
+     * Converts an unsigned integer into a hex string
+     *
+     * @param uint64 value : can be a negative value which is then casted to unsigned
+     * @return string hexstring
+     */
+    int UintToHex(lua_State* L)
+    {
+        uint64 val = Eluna::CHECKVAL<uint64>(L, 1, 0);
+
+        std::ostringstream oss;
+        oss << std::hex << val;
+        Eluna::Push(L, oss.str().c_str());
         return 1;
     }
 

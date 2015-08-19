@@ -163,7 +163,7 @@ public:
 
         std::unordered_set<Eluna*>& GetInstances()
         {
-            Eluna::THREADSAFE();
+            Eluna::ASSERT_MAIN_THREAD();
             return objs;
         }
 
@@ -254,7 +254,7 @@ private:
     }
 
 public:
-    static void THREADSAFE() { ASSERT(main_thread_id == std::this_thread::get_id()); }
+    static void ASSERT_MAIN_THREAD() { ASSERT(main_thread_id == std::this_thread::get_id()); }
 
     static Eluna* GEluna;
     static MsgQueue msgque;
@@ -266,8 +266,6 @@ public:
     // State messaging channels and messages
     std::unordered_set<std::string> channels;
     std::vector< std::pair<std::string, std::string> > channelMessages;
-    // uint64 store
-    std::unordered_map< uint64, uint64* > storeduints;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;

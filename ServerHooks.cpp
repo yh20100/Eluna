@@ -247,7 +247,7 @@ void Eluna::OnShutdownCancel()
 void Eluna::OnWorldUpdate(uint32 diff)
 {
     // Assumed thread safe
-    THREADSAFE();
+    ASSERT_MAIN_THREAD();
 
     if (ShouldReload())
     {

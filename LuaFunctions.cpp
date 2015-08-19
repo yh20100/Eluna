@@ -37,7 +37,6 @@ extern "C"
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
-#include "uint64Methods.h"
 
 ElunaFunction::ElunaRegister GlobalMethods[] =
 {
@@ -141,7 +140,9 @@ ElunaFunction::ElunaRegister GlobalMethods[] =
     { ENV_NONE, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse },
     { ENV_NONE, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer },
     { ENV_NONE, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses },
-    { ENV_BOTH, "NewUint64", &LuaGlobalFunctions::NewUint64 },
+    { ENV_BOTH, "UintNew", &LuaGlobalFunctions::UintNew },
+    { ENV_BOTH, "UintToString", &LuaGlobalFunctions::UintToString },
+    { ENV_BOTH, "UintToHex", &LuaGlobalFunctions::UintToHex },
     { ENV_BOTH, "StateChannelSend", &LuaGlobalFunctions::StateChannelSend },
     { ENV_BOTH, "StateChannelRegister", &LuaGlobalFunctions::StateChannelRegister },
     { ENV_BOTH, "StateChannelUnregister", &LuaGlobalFunctions::StateChannelUnregister },
@@ -1269,28 +1270,6 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
     { ENV_NONE, nullptr, nullptr }
 };
 
-ElunaFunction::ElunaRegister uint64Methods[] =
-{
-    { ENV_BOTH, "__add", &Luauint64::__add },
-    { ENV_BOTH, "__sub", &Luauint64::__sub },
-    { ENV_BOTH, "__mul", &Luauint64::__mul },
-    { ENV_BOTH, "__div", &Luauint64::__div },
-    { ENV_BOTH, "__mod", &Luauint64::__mod },
-    { ENV_BOTH, "__pow", &Luauint64::__pow },
-    { ENV_BOTH, "__eq", &Luauint64::__eq },
-    { ENV_BOTH, "__lt", &Luauint64::__lt },
-    { ENV_BOTH, "__le", &Luauint64::__le },
-    { ENV_BOTH, "__tostring", &Luauint64::__tostring },
-    { ENV_BOTH, "__gc", &Luauint64::gc },
-
-    { ENV_BOTH, "fitsint", &Luauint64::fitsint },
-    { ENV_BOTH, "toint", &Luauint64::toint },
-    { ENV_BOTH, "tonumber", &Luauint64::tonumber },
-    { ENV_BOTH, "tohex", &Luauint64::tohex },
-
-    { ENV_NONE, nullptr, nullptr }
-};
-
 template<typename T> const char* ElunaTemplate<T>::tname = nullptr;
 template<typename T> bool ElunaTemplate<T>::manageMemory = false;
 
@@ -1385,7 +1364,4 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
     ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
-
-    ElunaTemplate<uint64>::Register(E, "uint64", true);
-    ElunaTemplate<uint64>::SetMethods(E, uint64Methods);
 }

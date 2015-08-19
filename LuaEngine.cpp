@@ -58,14 +58,14 @@ Eluna* Eluna::GetGEluna(const char* info)
         {
             ELUNA_LOG_ERROR("[Eluna]: Race condition accessing GEluna. Report to devs with this message and details about what you were doing");
         }
-        Eluna::THREADSAFE();
+        Eluna::ASSERT_MAIN_THREAD();
     }
     return Eluna::GEluna;
 }
 
 void Eluna::Initialize()
 {
-    THREADSAFE();
+    ASSERT_MAIN_THREAD();
     ASSERT(!IsInitialized());
 
 #ifdef TRINITY
@@ -87,7 +87,7 @@ void Eluna::Initialize()
 
 void Eluna::Uninitialize()
 {
-    THREADSAFE();
+    ASSERT_MAIN_THREAD();
     ASSERT(IsInitialized());
 
     delete GEluna;
@@ -142,7 +142,7 @@ void Eluna::__ReloadEluna()
 
 void Eluna::_ReloadEluna()
 {
-    Eluna::THREADSAFE();
+    Eluna::ASSERT_MAIN_THREAD();
     ASSERT(IsInitialized());
 
     eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
@@ -658,18 +658,7 @@ void Eluna::Push(lua_State* luastate)
 }
 void Eluna::Push(lua_State* luastate, const uint64 l)
 {
-    Eluna* E = Eluna::GetEluna(luastate);
-    auto it = E->storeduints.find(l);
-    if (it == E->storeduints.end())
-    {
-        uint64* ptr = new uint64(l);
-        E->storeduints[*ptr] = ptr;
-        ElunaTemplate<uint64>::Push(luastate, ptr);
-    }
-    else
-    {
-        ElunaTemplate<uint64>::Push(luastate, it->second);
-    }
+    Push(luastate, static_cast<int64>(l));
 }
 void Eluna::Push(lua_State* luastate, const int8 i)
 {
@@ -800,41 +789,19 @@ void Eluna::Push(lua_State* luastate, Object const* obj)
 template<typename T>
 static T CheckIntegerRange(lua_State* luastate, int narg)
 {
-    if (!lua_isnumber(luastate, narg))
-    {
-        uint64 value = *Eluna::CHECKOBJ<uint64>(luastate, narg);
-
-        if (std::numeric_limits<T>::max() < 0 || value > static_cast<uint64>(std::numeric_limits<T>::max()))
-        {
-            std::ostringstream ss;
-            ss << "value must be less than or equal to " << static_cast<uint64>(std::numeric_limits<T>::max());
-            return luaL_argerror(luastate, narg, ss.str().c_str());
-        }
-
-        if (std::numeric_limits<T>::min() >= 0 && value < static_cast<uint64>(std::numeric_limits<T>::min()))
-        {
-            std::ostringstream ss;
-            ss << "value must be greater than or equal to " << static_cast<uint64>(std::numeric_limits<T>::min());
-            return luaL_argerror(luastate, narg, ss.str().c_str());
-        }
-
-        return value;
-    }
-
     lua_Integer value = luaL_checkinteger(luastate, narg);
 
-    if ((std::numeric_limits<T>::max() >= 0 && static_cast<uint64>(value) > static_cast<uint64>(std::numeric_limits<T>::max())) ||
-        (std::numeric_limits<T>::max() < 0 && static_cast<int64>(value) > static_cast<int64>(std::numeric_limits<T>::max())))
+    if (value > static_cast<lua_Integer>(std::numeric_limits<T>::max()))
     {
         std::ostringstream ss;
-        ss << "value must be less than or equal to " << std::numeric_limits<T>::max();
+        ss << "value must be less than or equal to " << static_cast<lua_Integer>(std::numeric_limits<T>::max());
         return luaL_argerror(luastate, narg, ss.str().c_str());
     }
 
-    if (std::numeric_limits<T>::min() < 0 || value < static_cast<lua_Integer>(std::numeric_limits<T>::min()))
+    if (value < static_cast<lua_Integer>(std::numeric_limits<T>::min()))
     {
         std::ostringstream ss;
-        ss << "value must be greater than or equal to " << std::numeric_limits<T>::min();
+        ss << "value must be greater than or equal to " << static_cast<lua_Integer>(std::numeric_limits<T>::min());
         return luaL_argerror(luastate, narg, ss.str().c_str());
     }
     return value;
@@ -846,7 +813,7 @@ template<> bool Eluna::CHECKVAL<bool>(lua_State* luastate, int narg)
 }
 template<> float Eluna::CHECKVAL<float>(lua_State* luastate, int narg)
 {
-    return luaL_checknumber(luastate, narg);
+    return static_cast<float>(luaL_checknumber(luastate, narg));
 }
 template<> double Eluna::CHECKVAL<double>(lua_State* luastate, int narg)
 {
@@ -882,7 +849,7 @@ template<> int64 Eluna::CHECKVAL<int64>(lua_State* luastate, int narg)
 }
 template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* luastate, int narg)
 {
-    return CheckIntegerRange<uint64>(luastate, narg);
+    return static_cast<uint64>(CHECKVAL<int64>(luastate, narg));
 }
 template<> const char* Eluna::CHECKVAL<const char*>(lua_State* luastate, int narg)
 {
