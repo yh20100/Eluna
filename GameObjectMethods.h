@@ -65,8 +65,8 @@ namespace LuaGameObject
 
     /*int IsDestructible(lua_State* L, GameObject* go) // TODO: Implementation core side
     {
-    Eluna::Push(L, go->IsDestructibleBuilding());
-    return 1;
+        Eluna::Push(L, go->IsDestructibleBuilding());
+        return 1;
     }*/
 
     /**
@@ -157,7 +157,7 @@ namespace LuaGameObject
     int GetDBTableGUIDLow(lua_State* L, GameObject* go)
     {
 #ifdef TRINITY
-        Eluna::Push(L, go->GetDBTableGUIDLow());
+        Eluna::Push(L, go->GetSpawnId());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());
@@ -247,7 +247,11 @@ namespace LuaGameObject
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
 
         // cs_gobject.cpp copy paste
+#ifdef TRINITY
         ObjectGuid ownerGuid = go->GetOwnerGUID();
+#else
+        ObjectGuid ownerGuid = go->GetOwnerGuid();
+#endif
         if (ownerGuid)
         {
             Unit* owner = ObjectAccessor::GetUnit(*go, ownerGuid);

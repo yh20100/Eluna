@@ -41,19 +41,19 @@ extern "C"
 ElunaFunction::ElunaRegister GlobalMethods[] =
 {
     // Hooks
-    { ENV_BOTH, "RegisterServerEvent", &LuaGlobalFunctions::RegisterServerEvent },                       // RegisterServerEvent(event, function)
-    { ENV_BOTH, "RegisterPlayerEvent", &LuaGlobalFunctions::RegisterPlayerEvent },                       // RegisterPlayerEvent(event, function)
-    { ENV_BOTH, "RegisterGuildEvent", &LuaGlobalFunctions::RegisterGuildEvent },                         // RegisterGuildEvent(event, function)
-    { ENV_BOTH, "RegisterGroupEvent", &LuaGlobalFunctions::RegisterGroupEvent },                         // RegisterGroupEvent(event, function)
-    { ENV_BOTH, "RegisterCreatureEvent", &LuaGlobalFunctions::RegisterCreatureEvent },                   // RegisterCreatureEvent(entry, event, function)
-    { ENV_BOTH, "RegisterUniqueCreatureEvent", &LuaGlobalFunctions::RegisterUniqueCreatureEvent },       // RegisterUniqueCreatureEvent(guid, instance, event, function)
-    { ENV_BOTH, "RegisterCreatureGossipEvent", &LuaGlobalFunctions::RegisterCreatureGossipEvent },       // RegisterCreatureGossipEvent(entry, event, function)
-    { ENV_BOTH, "RegisterGameObjectEvent", &LuaGlobalFunctions::RegisterGameObjectEvent },               // RegisterGameObjectEvent(entry, event, function)
-    { ENV_BOTH, "RegisterGameObjectGossipEvent", &LuaGlobalFunctions::RegisterGameObjectGossipEvent },   // RegisterGameObjectGossipEvent(entry, event, function)
-    { ENV_BOTH, "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent },                           // RegisterItemEvent(entry, event, function)
-    { ENV_BOTH, "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent },               // RegisterItemGossipEvent(entry, event, function)
-    { ENV_BOTH, "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },           // RegisterPlayerGossipEvent(menu_id, event, function)
-    { ENV_BOTH, "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },                               // RegisterBGEvent(event, function)
+    { ENV_BOTH, "RegisterServerEvent", &LuaGlobalFunctions::RegisterServerEvent },
+    { ENV_BOTH, "RegisterPlayerEvent", &LuaGlobalFunctions::RegisterPlayerEvent },
+    { ENV_BOTH, "RegisterGuildEvent", &LuaGlobalFunctions::RegisterGuildEvent },
+    { ENV_BOTH, "RegisterGroupEvent", &LuaGlobalFunctions::RegisterGroupEvent },
+    { ENV_BOTH, "RegisterCreatureEvent", &LuaGlobalFunctions::RegisterCreatureEvent },
+    { ENV_BOTH, "RegisterUniqueCreatureEvent", &LuaGlobalFunctions::RegisterUniqueCreatureEvent },
+    { ENV_BOTH, "RegisterCreatureGossipEvent", &LuaGlobalFunctions::RegisterCreatureGossipEvent },
+    { ENV_BOTH, "RegisterGameObjectEvent", &LuaGlobalFunctions::RegisterGameObjectEvent },
+    { ENV_BOTH, "RegisterGameObjectGossipEvent", &LuaGlobalFunctions::RegisterGameObjectGossipEvent },
+    { ENV_BOTH, "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent },
+    { ENV_BOTH, "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent },
+    { ENV_BOTH, "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },
+    { ENV_BOTH, "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
     { ENV_BOTH, "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
     { ENV_BOTH, "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
 
@@ -137,9 +137,6 @@ ElunaFunction::ElunaRegister GlobalMethods[] =
     { ENV_BOTH, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
     { ENV_BOTH, "SendMail", &LuaGlobalFunctions::SendMail },
     { ENV_WORLD, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
-    { ENV_NONE, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse },
-    { ENV_NONE, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer },
-    { ENV_NONE, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses },
     { ENV_BOTH, "UintNew", &LuaGlobalFunctions::UintNew },
     { ENV_BOTH, "UintToString", &LuaGlobalFunctions::UintToString },
     { ENV_BOTH, "UintToHex", &LuaGlobalFunctions::UintToHex },
@@ -460,7 +457,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { ENV_BOTH, "GetQuestLevel", &LuaPlayer::GetQuestLevel },                               // :GetQuestLevel(quest) - Returns quest's level
     { ENV_BOTH, "GetChatTag", &LuaPlayer::GetChatTag },                                     // :GetChatTag() - Returns player chat tag ID
     { ENV_BOTH, "GetRestBonus", &LuaPlayer::GetRestBonus },                                 // :GetRestBonus() - Gets player's rest bonus
-    { ENV_BOTH, "GetRestType", &LuaPlayer::GetRestType },                                   // :GetRestType() - Returns the player's rest type
 #ifdef WOTLK
     { ENV_BOTH, "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },                 // :GetPhaseMaskForSpawn() - Gets the real phasemask for spawning things. Used if the player is in GM mode
 #endif
@@ -492,7 +488,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { ENV_BOTH, "GetBattlegroundId", &LuaPlayer::GetBattlegroundId },                       // :GetBattlegroundId() - Returns the player's current battleground ID
     { ENV_BOTH, "GetBattlegroundTypeId", &LuaPlayer::GetBattlegroundTypeId },               // :GetBattlegroundTypeId() - Returns the player's current battleground type ID
     { ENV_BOTH, "GetXPRestBonus", &LuaPlayer::GetXPRestBonus },                             // :GetXPRestBonus(xp) - Returns the rested bonus XP from given XP
-    { ENV_BOTH, "GetRestTime", &LuaPlayer::GetRestTime },                                   // :GetRestTime() - Returns the timed rested
     { ENV_BOTH, "GetGroupInvite", &LuaPlayer::GetGroupInvite },                             // :GetGroupInvite() - Returns the group invited to
     { ENV_BOTH, "GetSubGroup", &LuaPlayer::GetSubGroup },                                   // :GetSubGroup() - Gets the player's current subgroup ID
     { ENV_BOTH, "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },           // :GetNextRandomRaidMember(radius) - Gets a random raid member in given radius
@@ -547,7 +542,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { ENV_BOTH, "SetPvPDeath", &LuaPlayer::SetPvPDeath },                   // :SetPvPDeath([on]) - Sets PvP death on or off
     { ENV_BOTH, "SetAcceptWhispers", &LuaPlayer::SetAcceptWhispers },       // :SetAcceptWhispers([on]) - Sets whisper accepting death on or off
     { ENV_BOTH, "SetRestBonus", &LuaPlayer::SetRestBonus },                 // :SetRestBonus(bonusrate) - Sets new restbonus rate
-    { ENV_BOTH, "SetRestType", &LuaPlayer::SetRestType },                   // :SetRestType() - Sets rest type
     { ENV_BOTH, "SetQuestStatus", &LuaPlayer::SetQuestStatus },             // :SetQuestStatus(entry, status) - Sets the quest's status
     { ENV_BOTH, "SetReputation", &LuaPlayer::SetReputation },               // :SetReputation(faction, value) - Sets the faction reputation for the player
     { ENV_BOTH, "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },   // :SetFreeTalentPoints(points) - Sets the amount of unused talent points
@@ -556,7 +550,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { ENV_BOTH, "SetSkill", &LuaPlayer::SetSkill },                         // :SetSkill(skill, step, currVal, maxVal) - Sets the skill's boundaries and value
     { ENV_BOTH, "SetFactionForRace", &LuaPlayer::SetFactionForRace },       // :SetFactionForRace(race) - Sets the faction by raceID
     { ENV_BOTH, "SetDrunkValue", &LuaPlayer::SetDrunkValue },               // :SetDrunkValue(newDrunkValue) - Sets drunkness value
-    { ENV_BOTH, "SetRestTime", &LuaPlayer::SetRestTime },                   // :SetRestTime(value) - Sets the rested time
     { ENV_BOTH, "SetAtLoginFlag", &LuaPlayer::SetAtLoginFlag },             // :SetAtLoginFlag(flag) - Adds an at login flag
     { ENV_BOTH, "SetPlayerLock", &LuaPlayer::SetPlayerLock },               // :SetPlayerLock(on/off)
     { ENV_BOTH, "SetGender", &LuaPlayer::SetGender },                       // :SetGender(value) - 0 = male 1 = female
@@ -1094,8 +1087,6 @@ ElunaRegister<Guild> GuildMethods[] =
     { ENV_WORLD, "SetLeader", &LuaGuild::SetLeader },                    // :SetLeader() - Sets the guild's leader
 #endif
 
-    // Boolean
-
     // Other
     { ENV_BOTH, "SendPacket", &LuaGuild::SendPacket },                  // :SendPacket(packet) - sends packet to guild
     { ENV_BOTH, "SendPacketToRanked", &LuaGuild::SendPacketToRanked },  // :SendPacketToRanked(packet, rankId) - sends packet to guild, specifying a rankId will only send the packet to your ranked members
@@ -1208,7 +1199,7 @@ ElunaRegister<Map> MapMethods[] =
     // Setters
     { ENV_BOTH, "SetWeather", &LuaMap::SetWeather },
 
-    // Booleans
+    // Boolean
 #ifndef CLASSIC
     { ENV_BOTH, "IsArena", &LuaMap::IsArena },                          // :IsArena() - Returns the true if the map is an arena, else false UNDOCUMENTED
 #endif
@@ -1264,8 +1255,6 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
     { ENV_BOTH, "GetMinPlayersPerTeam", &LuaBattleGround::GetMinPlayersPerTeam },
     { ENV_BOTH, "GetWinner", &LuaBattleGround::GetWinner },
     { ENV_BOTH, "GetStatus", &LuaBattleGround::GetStatus },
-
-    // Setters
 
     { ENV_NONE, nullptr, nullptr }
 };

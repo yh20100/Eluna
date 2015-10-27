@@ -50,6 +50,45 @@ typedef QueryNamedResult ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
+#ifndef HIGHGUID_PLAYER
+#define HIGHGUID_PLAYER         HighGuid::Player
+#endif
+#ifndef HIGHGUID_UNIT
+#define HIGHGUID_UNIT           HighGuid::Unit
+#endif
+#ifndef HIGHGUID_GAMEOBJECT
+#define HIGHGUID_GAMEOBJECT     HighGuid::GameObject
+#endif
+#ifndef HIGHGUID_TRANSPORT
+#define HIGHGUID_TRANSPORT      HighGuid::Transport
+#endif
+#ifndef HIGHGUID_MO_TRANSPORT
+#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
+#endif
+#ifndef HIGHGUID_VEHICLE
+#define HIGHGUID_VEHICLE        HighGuid::Vehicle
+#endif
+#ifndef HIGHGUID_PET
+#define HIGHGUID_PET            HighGuid::Pet
+#endif
+#ifndef HIGHGUID_DYNAMICOBJECT
+#define HIGHGUID_DYNAMICOBJECT  HighGuid::DynamicObject
+#endif
+#ifndef HIGHGUID_CORPSE
+#define HIGHGUID_CORPSE         HighGuid::Corpse
+#endif
+#ifndef HIGHGUID_ITEM
+#define HIGHGUID_ITEM           HighGuid::Item
+#endif
+#ifndef HIGHGUID_INSTANCE
+#define HIGHGUID_INSTANCE       HighGuid::Instance
+#endif
+#ifndef HIGHGUID_GROUP
+#define HIGHGUID_GROUP          HighGuid::Group
+#endif
+#ifndef HIGHGUID_CONTAINER
+#define HIGHGUID_CONTAINER      HighGuid::Container
+#endif
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif
@@ -65,6 +104,7 @@ typedef QueryNamedResult ElunaQuery;
 
 class Unit;
 class WorldObject;
+struct FactionTemplateEntry;
 
 namespace ElunaUtil
 {
@@ -97,16 +137,19 @@ namespace ElunaUtil
     {
     public:
         WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0);
+            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0, uint32 dead = 0);
         WorldObject const& GetFocusObject() const;
         bool operator()(WorldObject* u);
 
-        WorldObject const* i_obj;
-        uint32 i_hostile;
-        uint32 i_entry;
+        WorldObject const* const i_obj;
+        Unit const* i_obj_unit;
+        FactionTemplateEntry const* i_obj_fact;
+        uint32 const i_hostile; // 0 both, 1 hostile, 2 friendly
+        uint32 const i_entry;
         float i_range;
-        uint16 i_typeMask;
-        bool i_nearest;
+        uint16 const i_typeMask;
+        uint32 const i_dead; // 0 both, 1 alive, 2 dead
+        bool const i_nearest;
     };
 
     /*

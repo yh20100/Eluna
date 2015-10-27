@@ -56,8 +56,8 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator version
      *
-     * - For TrinityCore returns the date of the last revision, e.g. `2014-08-13 17:27:22 +0300`
-     * - For cMaNGOS/MaNGOS returns the revision number, e.g. `12708`
+     * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
+     * - For cMaNGOS/MaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
      *
      * @return string version
      */
@@ -111,7 +111,7 @@ namespace LuaGlobalFunctions
     int GetPlayerByGUID(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, eObjectAccessor->FindPlayer(ObjectGuid(guid)));
+        Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(guid)));
         return 1;
     }
 
@@ -124,7 +124,7 @@ namespace LuaGlobalFunctions
     int GetPlayerByName(lua_State* L)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 1);
-        Eluna::Push(L, eObjectAccessor->FindPlayerByName(name));
+        Eluna::Push(L, eObjectAccessor()FindPlayerByName(name));
         return 1;
     }
 
@@ -168,7 +168,7 @@ namespace LuaGlobalFunctions
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
                 if (Player* player = it->second)
@@ -397,12 +397,12 @@ namespace LuaGlobalFunctions
      * GUID consist of entry ID, low GUID, and type ID.
      *
      * @param uint64 guid : GUID of an [Object]
-     * @return uint32 typeId : type ID of the [Object]
+     * @return int32 typeId : type ID of the [Object]
      */
     int GetGUIDType(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, GUID_HIPART(guid));
+        Eluna::Push(L, static_cast<int>(GUID_HIPART(guid)));
         return 1;
     }
 
@@ -1549,7 +1549,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-                if (!creature->Create(eObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, phase, entry, x, y, z, o))
+                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, x, y, z, o))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1558,15 +1558,21 @@ namespace LuaGlobalFunctions
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
-                uint32 db_lowguid = creature->GetDBTableGUIDLow();
-                if (!creature->LoadCreatureFromDB(db_lowguid, map))
+                uint32 db_guid = creature->GetSpawnId();
+
+                // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
+                // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+                creature->CleanupsBeforeDelete();
+                delete creature;
+                creature = new Creature();
+                if (!creature->LoadCreatureFromDB(db_guid, map))
                 {
                     delete creature;
                     Eluna::Push(L);
                     return 1;
                 }
 
-                eObjectMgr->AddCreatureToGrid(db_lowguid, eObjectMgr->GetCreatureData(db_lowguid));
+                eObjectMgr->AddCreatureToGrid(db_guid, eObjectMgr->GetCreatureData(db_guid));
                 Eluna::Push(L, creature);
             }
             else
@@ -1605,9 +1611,9 @@ namespace LuaGlobalFunctions
             }
 
             GameObject* object = new GameObject;
-            uint32 lowguid = eObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+            uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-            if (!object->Create(lowguid, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
+            if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
             {
                 delete object;
                 Eluna::Push(L);
@@ -1623,14 +1629,14 @@ namespace LuaGlobalFunctions
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadGameObjectFromDB(lowguid, map))
+                if (!object->LoadGameObjectFromDB(guidLow, map))
                 {
                     delete object;
                     Eluna::Push(L);
                     return 1;
                 }
 
-                eObjectMgr->AddGameobjectToGrid(lowguid, eObjectMgr->GetGOData(lowguid));
+                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
             }
             else
                 map->AddToMap(object);
@@ -1811,7 +1817,7 @@ namespace LuaGlobalFunctions
      */
     int SaveAllPlayers(lua_State* /*L*/)
     {
-        eObjectAccessor->SaveAllPlayers();
+        eObjectAccessor()SaveAllPlayers();
         return 0;
     }
 
@@ -2122,6 +2128,10 @@ namespace LuaGlobalFunctions
             nodeEntry->x = entry.LocX;
             nodeEntry->y = entry.LocY;
             nodeEntry->z = entry.LocZ;
+            nodeEntry->MountCreatureID[0] = mountH;
+            nodeEntry->MountCreatureID[1] = mountA;
+            sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
+            sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
 #else
             entry.path = pathId;
             entry.index = nodeId;
@@ -2130,11 +2140,11 @@ namespace LuaGlobalFunctions
             nodeEntry->x = entry.x;
             nodeEntry->y = entry.y;
             nodeEntry->z = entry.z;
-#endif
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
+#endif
         }
         if (startNode >= nodeId)
             return 1;
@@ -2147,44 +2157,6 @@ namespace LuaGlobalFunctions
         sTaxiPathStore.SetEntry(pathId, pathEntry);
         Eluna::Push(L, pathId);
         return 1;
-    }
-
-    /**
-     * Removes a [Corpse] from the world.
-     *
-     * @param [Corpse] corpse : [Corpse] to remove
-     */
-    int RemoveCorpse(lua_State* L)
-    {
-        Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
-        eObjectAccessor->RemoveCorpse(corpse);
-        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
-        return 0;
-    }
-
-    /**
-     * Converts a [Corpse] by GUID, and optionally allows for insignia to be looted.
-     *
-     * @param uint64 playerGUID : GUID of the [Player]
-     * @param bool insignia = false : if `true`, allow an insignia to be looted
-     * @return [Corpse] corpse : returns converted [Corpse]
-     */
-    int ConvertCorpseForPlayer(lua_State* L)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        bool insignia = Eluna::CHECKVAL<bool>(L, 2, false);
-
-        Eluna::Push(L, eObjectAccessor->ConvertCorpseForPlayer(ObjectGuid(guid), insignia));
-        return 1;
-    }
-
-    /**
-     * Removes old [Corpse]s from the world.
-     */
-    int RemoveOldCorpses(lua_State* /*L*/)
-    {
-        eObjectAccessor->RemoveOldCorpses();
-        return 0;
     }
 
     /**

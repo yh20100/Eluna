@@ -20,6 +20,8 @@ struct ElunaCreatureAI : ScriptedAI
 {
     // used to delay the spawn hook triggering on AI creation
     bool justSpawned;
+    // used to delay movementinform hook (WP hook)
+    std::vector< std::pair<uint32, uint32> > movepoints;
 #ifndef TRINITY
 #define me  m_creature
 #endif
@@ -44,18 +46,29 @@ struct ElunaCreatureAI : ScriptedAI
             JustRespawned();
         }
 
-        if (Map* map = me->FindMap())
+        Map* map = me->FindMap();
+        if (!map)
+            return;
+
+        if (!movepoints.empty())
         {
-            if (!map->GetEluna()->UpdateAI(me, diff))
+            for (auto& point : movepoints)
             {
-#ifdef TRINITY
-                if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
-                    ScriptedAI::UpdateAI(diff);
-#else
-                if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
-                    ScriptedAI::UpdateAI(diff);
-#endif
+                if (!map->GetEluna()->MovementInform(me, point.first, point.second))
+                    ScriptedAI::MovementInform(point.first, point.second);
             }
+            movepoints.clear();
+        }
+
+        if (!map->GetEluna()->UpdateAI(me, diff))
+        {
+#ifdef TRINITY
+            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
+                ScriptedAI::UpdateAI(diff);
+#else
+            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
+                ScriptedAI::UpdateAI(diff);
+#endif
         }
     }
 
@@ -111,9 +124,9 @@ struct ElunaCreatureAI : ScriptedAI
     //Called at waypoint reached or PointMovement end
     void MovementInform(uint32 type, uint32 id) override
     {
-        if (Map* map = me->FindMap())
-            if (!map->GetEluna()->MovementInform(me, type, id))
-                ScriptedAI::MovementInform(type, id);
+        // delayed since hook triggers before actually reaching the point
+        // and starting new movement would bug
+        movepoints.push_back(std::make_pair(type, id));
     }
 
     // Called before EnterCombat even before the creature is in combat.

@@ -24,7 +24,6 @@
  */
 namespace LuaObject
 {
-    /* BOOLEAN */
     /**
      * Returns `true` if the specified flag is set, otherwise `false`.
      *
@@ -52,7 +51,6 @@ namespace LuaObject
         return 1;
     }
 
-    /* GETTERS */
     /**
      * Returns the data at the specified index, casted to a signed 32-bit integer.
      *
@@ -184,7 +182,11 @@ namespace LuaObject
      */
     int GetGUIDLow(lua_State* L, Object* obj)
     {
+#ifdef TRINITY
+        Eluna::Push(L, obj->GetGUID().GetCounter());
+#else
         Eluna::Push(L, obj->GetGUIDLow());
+#endif
         return 1;
     }
 
@@ -224,7 +226,6 @@ namespace LuaObject
         return 0;
     }
 
-    /* SETTERS */
     /**
      * Sets the specified flag in the data value at the specified index.
      *
@@ -376,7 +377,6 @@ namespace LuaObject
         return 0;
     }
 
-    /* OTHER */
     /**
      * Removes a flag from the value at the specified index.
      *

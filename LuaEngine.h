@@ -196,8 +196,8 @@ private:
     static InstanceHolder instances;
 
     uint32 event_level;
-    // When a hook pushes arguments to be passed to event handlers
-    //   this is used to keep track of how many arguments were pushed.
+    // When a hook pushes arguments to be passed to event handlers,
+    //  this is used to keep track of how many arguments were pushed.
     uint8 push_counter;
     bool enabled;
 
@@ -214,8 +214,8 @@ private:
     void CloseLua();
     void DestroyBindStores();
     void CreateBindStores();
-    bool ExecuteCall(int params, int res);
     void InvalidateObjects();
+    bool ExecuteCall(int params, int res);
 
     // Use ReloadEluna() to make eluna reload
     // This is called on _ReloadEluna to reload eluna
@@ -574,7 +574,6 @@ public:
     void OnConfigLoad(bool reload);
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
     void OnShutdownCancel();
-    void OnUpdate(uint32 diff);
     void OnStartup();
     void OnShutdown();
 

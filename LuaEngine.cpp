@@ -122,6 +122,22 @@ void Eluna::LoadScriptPaths()
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 }
 
+#ifdef TRINITY
+class ElunaAIUpdateWorker
+{
+public:
+    void Visit(std::unordered_map<ObjectGuid, Creature*>& creatureMap)
+    {
+        for (auto const& p : creatureMap)
+            if (p.second->IsInWorld())
+                p.second->AIM_Initialize();
+    }
+
+    template<class T>
+    void Visit(std::unordered_map<ObjectGuid, T*>&) { }
+};
+#endif
+
 void Eluna::__ReloadEluna()
 {
     // Close lua
@@ -152,6 +168,16 @@ void Eluna::_ReloadEluna()
 
     for (auto& e : instances.GetInstances())
         e->__ReloadEluna();
+
+#ifdef TRINITY
+    // Re initialize creature AI restoring C++ AI or applying lua AI
+    sMapMgr->DoForAllMaps([](Map* map)
+    {
+        ElunaAIUpdateWorker worker;
+        TypeContainerVisitor<ElunaAIUpdateWorker, MapStoredObjectTypesContainer> visitor(worker);
+        visitor.Visit(map->GetObjectsStore());
+    });
+#endif
 
     reload = false;
 }
@@ -190,7 +216,6 @@ CreatureUniqueBindings(nullptr)
     OpenLua();
 
     // Replace this with map insert if making multithread version
-    //
 
     // Set event manager. Must be after setting sEluna
     // on multithread have a map of state pointers and here insert this pointer to the map and then save a pointer of that pointer to the EventMgr
@@ -1166,7 +1191,9 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
             break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-    luaL_error(L, "Unknown event type (regtype %hhu, event %u, entry %u, guid " UI64FMTD ", instance %u)", regtype, event_id, entry, guid, instanceId);
+    std::ostringstream oss;
+    oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " << guid << ", instance " << instanceId;
+    luaL_error(L, "Unknown event type (%s)", oss.str().c_str());
     return 0;
 }
 

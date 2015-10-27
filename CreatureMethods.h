@@ -14,8 +14,6 @@
  */
 namespace LuaCreature
 {
-    /* BOOLEAN */
-
     /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
      *   and returns `false` otherwise.
@@ -368,12 +366,25 @@ namespace LuaCreature
         return 1;
     }
 
+    /**
+     * Returns true if the [Creature] is damaged enough for looting
+     *
+     * @return bool isDamagedEnough
+     */
     int IsDamageEnoughForLootingAndReward(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, creature->IsDamageEnoughForLootingAndReward());
         return 1;
     }
 
+    /**
+     * Returns true if the [Creature] can start attacking specified target
+     *
+     * Does not work on most targets
+     *
+     * @param [Unit] target
+     * @param bool force = true : force [Creature] to attack
+     */
     int CanStartAttack(lua_State* L, Creature* creature) // TODO: Implement core side
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -383,6 +394,12 @@ namespace LuaCreature
         return 1;
     }
 
+    /**
+     * Returns true if [Creature] has the specified loot mode
+     *
+     * @param uint16 lootMode
+     * @return bool hasLootMode
+     */
     int HasLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
@@ -391,8 +408,6 @@ namespace LuaCreature
         return 1;
     }
 #endif
-
-    /* GETTERS */
 
     /**
      * Returns the time it takes for this [Creature] to respawn once killed.
@@ -843,15 +858,13 @@ namespace LuaCreature
     int GetDBTableGUIDLow(lua_State* L, Creature* creature)
     {
 #ifdef TRINITY
-        Eluna::Push(L, creature->GetDBTableGUIDLow());
+        Eluna::Push(L, creature->GetSpawnId());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, creature->GetGUIDLow());
 #endif
         return 1;
     }
-
-    /* SETTERS */
 
     /**
      * Sets the [Creature]'s NPC flags to `flags`.
@@ -1089,8 +1102,6 @@ namespace LuaCreature
         return 0;
     }
 
-    /* OTHER */
-
     /**
      * Despawn this [Creature].
      *
@@ -1127,7 +1138,7 @@ namespace LuaCreature
     }
 
     /**
-     * Make the [Creature] start following it's waypoint path.
+     * Make the [Creature] start following its waypoint path.
      */
     int MoveWaypoint(lua_State* /*L*/, Creature* creature)
     {
@@ -1227,12 +1238,20 @@ namespace LuaCreature
     }
 
 #ifdef TRINITY
+    /**
+     * Resets [Creature]'s loot mode to default
+     */
     int ResetLootMode(lua_State* /*L*/, Creature* creature) // TODO: Implement LootMode features
     {
         creature->ResetLootMode();
         return 0;
     }
 
+    /**
+     * Removes specified loot mode from [Creature]
+     *
+     * @param uint16 lootMode
+     */
     int RemoveLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
@@ -1241,6 +1260,11 @@ namespace LuaCreature
         return 0;
     }
 
+    /**
+     * Adds a loot mode to the [Creature]
+     *
+     * @param uint16 lootMode
+     */
     int AddLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);

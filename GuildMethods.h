@@ -12,7 +12,6 @@
  */
 namespace LuaGuild
 {
-    /* GETTERS */
     /**
      * Returns a table with the [Player]s in this [Guild]
      *
@@ -30,7 +29,7 @@ namespace LuaGuild
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
                 if (Player* player = it->second)
@@ -56,6 +55,21 @@ namespace LuaGuild
     int GetMemberCount(lua_State* L, Guild* guild)
     {
         Eluna::Push(L, guild->GetMemberSize());
+        return 1;
+    }
+
+    /**
+     * Finds and returns the [Guild] leader by their GUID if logged in
+     *
+     * @return [Player] leader
+     */
+    int GetLeader(Eluna* /*E*/, lua_State* L, Guild* guild)
+    {
+#ifndef TRINITY
+        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
+#else
+        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
+#endif
         return 1;
     }
 
@@ -122,7 +136,6 @@ namespace LuaGuild
         return 1;
     }
 
-    /* SETTERS */
 #ifndef CATA
     /**
      * Sets the leader of this [Guild]
@@ -162,7 +175,6 @@ namespace LuaGuild
     }
 #endif
 
-    /* OTHER */
     // SendPacketToGuild(packet)
     /**
      * Sends a [WorldPacket] to all the [Player]s in the [Guild]
@@ -255,6 +267,12 @@ namespace LuaGuild
 
 #ifndef CLASSIC
     // Move to Player methods
+    /**
+     * Windraws money from the [Guild] bank
+     *
+     * @param [Player] player
+     * @param uint32 money
+     */
     int WithdrawBankMoney(lua_State* L, Guild* guild)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -270,6 +288,12 @@ namespace LuaGuild
     }
 
     // Move to Player methods
+    /**
+     * Deposits money to the [Guild] bank
+     *
+     * @param [Player] player
+     * @param uint32 money
+     */
     int DepositBankMoney(lua_State* L, Guild* guild)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
