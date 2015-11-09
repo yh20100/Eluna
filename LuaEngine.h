@@ -102,6 +102,7 @@ typedef VehicleInfo Vehicle;
 struct lua_State;
 class Eluna;
 class EventMgr;
+class TableMgr;
 class ElunaObject;
 template<typename T> class ElunaTemplate;
 
@@ -261,6 +262,7 @@ public:
     static std::thread::id const main_thread_id;
     std::thread::id current_thread_id;
     EventMgr* eventMgr;
+    TableMgr* tableMgr;
     Map* const owner;
     lua_State* L;
     // State messaging channels and messages
@@ -340,6 +342,11 @@ public:
         return eventMgr;
     }
 
+    TableMgr* GetTableMgr() const
+    {
+        return tableMgr;
+    }
+
     /*
      * Returns `true` if Eluna has instance data for `map`.
      */
@@ -387,6 +394,7 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
+    GameObjectAI* GetAI(GameObject* gameobject);
     InstanceData* GetInstanceData(Map* map);
     void FreeInstanceId(uint32 instanceId);
 

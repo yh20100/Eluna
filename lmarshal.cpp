@@ -47,6 +47,7 @@ extern "C" {
 #define MAR_I32 4
 #define MAR_I64 8
 
+#define MAR_TINT   LUA_NUMTAGS
 #define MAR_MAGIC 0x8f
 #define SEEN_IDX  3
 
@@ -112,6 +113,8 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
 {
     size_t l;
     int val_type = lua_type(L, val);
+    if (lua_isinteger(L, val))
+        val_type = MAR_TINT;
     lua_pushvalue(L, val);
 
     buf_write(L, (const char*)&val_type, MAR_CHR, buf);
@@ -129,6 +132,11 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
     }
     case LUA_TNUMBER: {
         lua_Number num_val = lua_tonumber(L, -1);
+        buf_write(L, (const char*)&num_val, MAR_I64, buf);
+        break;
+    }
+    case MAR_TINT: {
+        lua_Integer num_val = lua_tointeger(L, -1);
         buf_write(L, (const char*)&num_val, MAR_I64, buf);
         break;
     }
@@ -340,6 +348,10 @@ static void mar_decode_value
         break;
     case LUA_TNUMBER:
         lua_pushnumber(L, *(lua_Number*)*p);
+        mar_incr_ptr(MAR_I64);
+        break;
+    case MAR_TINT:
+        lua_pushinteger(L, *(lua_Integer*)*p);
         mar_incr_ptr(MAR_I64);
         break;
     case LUA_TSTRING:

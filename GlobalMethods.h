@@ -465,7 +465,7 @@ namespace LuaGlobalFunctions
 
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef >= 0)
+        if (functionRef != LUA_REFNIL)
             return Eluna::GetEluna(L)->Register(L, regtype, id, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
@@ -480,7 +480,7 @@ namespace LuaGlobalFunctions
 
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef >= 0)
+        if (functionRef != LUA_REFNIL)
             return Eluna::GetEluna(L)->Register(L, regtype, 0, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 2, "unable to make a ref to function");
@@ -497,7 +497,7 @@ namespace LuaGlobalFunctions
 
         lua_pushvalue(L, 4);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef >= 0)
+        if (functionRef != LUA_REFNIL)
             return Eluna::GetEluna(L)->Register(L, regtype, 0, guid, instanceId, ev, functionRef, shots);
         else
             luaL_argerror(L, 4, "unable to make a ref to function");
@@ -1281,7 +1281,7 @@ namespace LuaGlobalFunctions
 
         lua_pushvalue(L, 1);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
+        if (functionRef != LUA_REFNIL)
         {
             Eluna::GetEluna(L)->GetEventMgr()->AddGlobalEvent(functionRef, delay, repeats);
             Eluna::Push(L, functionRef);

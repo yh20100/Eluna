@@ -7,10 +7,12 @@
 #include "Hooks.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"
+#include "TableMgr.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
+#include "ElunaGameObjectAI.h"
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
 
@@ -143,14 +145,22 @@ void Eluna::__ReloadEluna()
     // Close lua
     CloseLua();
 
+    // remove timed events
     delete eventMgr;
     eventMgr = nullptr;
+
+    // remove saved tables
+    delete tableMgr;
+    tableMgr = nullptr;
 
     // Open new lua and libaraies
     OpenLua();
 
-    // Remove all timed events
+    // new timed event mgr
     eventMgr = new EventMgr(this);
+
+    // new table mgr
+    tableMgr = new TableMgr(this);
 
     // Run scripts from loaded paths
     RunScripts();
@@ -1261,6 +1271,25 @@ CreatureAI* Eluna::GetAI(Creature* creature)
     return nullptr;
 }
 
+GameObjectAI* Eluna::GetAI(GameObject* gameobject)
+{
+    if (!IsEnabled())
+        return nullptr;
+
+    for (int i = 1; i < Hooks::GAMEOBJECT_EVENT_COUNT; ++i)
+    {
+        Hooks::GameObjectEvents event_id = (Hooks::GameObjectEvents)i;
+
+        auto entryKey = EntryKey<Hooks::GameObjectEvents>(event_id, gameobject->GetEntry());
+        auto uniqueKey = UniqueObjectKey<Hooks::GameObjectEvents>(event_id, gameobject->GET_GUID(), gameobject->GetInstanceId());
+
+        if (GameObjectEventBindings->HasBindingsFor(entryKey))
+            return new ElunaGameObjectAI(gameobject);
+    }
+
+    return nullptr;
+}
+
 InstanceData* Eluna::GetInstanceData(Map* map)
 {
     if (!IsEnabled())
@@ -1292,6 +1321,8 @@ void Eluna::CreateInstanceData(Map const* map)
 {
     ASSERT(lua_istable(L, -1));
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (ref == LUA_REFNIL)
+        return;
 
     if (!map->Instanceable())
     {
