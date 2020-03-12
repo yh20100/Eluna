@@ -1254,8 +1254,8 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         Cell::VisitAllObjects(unit, searcher, range);
 #elif AZEROTHCORE
-        Trinity::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        acore::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        acore::UnitListSearcher<acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, range);
@@ -1295,8 +1295,8 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         Cell::VisitAllObjects(unit, searcher, range);
 #elif AZEROTHCORE
-        Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        acore::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        acore::UnitListSearcher<acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, range);
@@ -2132,6 +2132,7 @@ namespace LuaUnit
     int MoveExpire(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+        (void) L; // ensure that the variable is referenced in order to pass compiler checks
         unit->GetMotionMaster()->Clear();
 #else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -2148,6 +2149,7 @@ namespace LuaUnit
     int MoveClear(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+        (void) L; // ensure that the variable is referenced in order to pass compiler checks
         unit->GetMotionMaster()->Clear();
 #else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
